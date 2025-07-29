@@ -1,254 +1,176 @@
-import { Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
-
-type Note = {
-  id: string;
-  title: string;
-  content: string;
-};
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+import { useState } from "react";
+import Header from "./components/Header";
+import NoteForm from "./components/NoteForm";
+import NotePreview from "./components/NotePreview";
+import ConfirmDialog from "./components/ConfirmDialog";
+import NoteSidebar from "./components/NoteSidebar";
+import { useTheme } from "./hooks/useTheme";
+import { useNotes } from "./hooks/useNotes";
+import type { Note } from "./types";
 
 function App() {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const { isDarkMode, toggleTheme } = useTheme();
+  const {
+    notes,
+    fetchNotes,
+    createNote,
+    updateNote,
+    deleteNote,
+    isFetching,
+    hasError,
+  } = useNotes();
+
+  const [form, setForm] = useState({ title: "", content: "" });
+  const [activeNote, setActiveNote] = useState<Note | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
-  const [hasError, setHasError] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return document.documentElement.classList.contains("dark");
-  });
+  const isEditing = Boolean(activeNote);
+  const showForm = isEditing || isCreating;
 
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    const useDark = storedTheme === "dark" || (!storedTheme && prefersDark);
-
-    document.documentElement.classList.toggle("dark", useDark);
-    setIsDarkMode(useDark);
-  }, []);
-
-  const toggleTheme = () => {
-    const html = document.documentElement;
-    const newTheme = isDarkMode ? "light" : "dark";
-    html.classList.toggle("dark", newTheme === "dark");
-    setIsDarkMode(newTheme === "dark");
-    localStorage.setItem("theme", newTheme);
+  const resetForm = () => {
+    setForm({ title: "", content: "" });
+    setActiveNote(null);
+    setIsCreating(false);
   };
 
-  const fetchNotes = async () => {
-    setIsFetching(true);
-    try {
-      const res = await fetch(`${API_URL}/notes`);
-      if (!res.ok) throw new Error("Server error");
-      const data = await res.json();
-      setNotes(data);
-      setHasError(false);
-    } catch (err) {
-      console.error("Failed to fetch notes", err);
-      setHasError(true);
-    } finally {
-      setIsFetching(false);
-    }
-  };
-
-  const createNote = async () => {
-    if (!title.trim() || !content.trim()) return;
+  const createNew = () => {
+    resetForm();
     setIsCreating(true);
-    try {
-      const res = await fetch(`${API_URL}/notes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content }),
-      });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-      if (res.ok) {
-        setTitle("");
-        setContent("");
-        fetchNotes();
+  const editNote = (note: Note) => {
+    setActiveNote(note);
+    setIsCreating(false);
+    setForm({ title: note.title, content: note.content });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const saveNote = async () => {
+    if (!form.title.trim() || !form.content.trim()) return;
+
+    setIsSaving(true);
+    try {
+      if (activeNote) {
+        await updateNote(activeNote.id, form);
+      } else {
+        const newNote = await createNote(form);
+        setActiveNote(newNote);
+        setIsCreating(false);
       }
     } finally {
-      setIsCreating(false);
+      setIsSaving(false);
     }
   };
 
-  const updateNote = async () => {
-    if (!editingNoteId || !title.trim() || !content.trim()) return;
-    setIsCreating(true);
-    try {
-      const res = await fetch(`${API_URL}/notes/${editingNoteId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content }),
-      });
-
-      if (res.ok) {
-        setTitle("");
-        setContent("");
-        setEditingNoteId(null);
-        fetchNotes();
-      }
-    } finally {
-      setIsCreating(false);
-    }
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    await deleteNote(deleteId);
+    if (activeNote?.id === deleteId) resetForm();
+    setDeleteId(null);
   };
 
-  const deleteNote = async (id: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this note?"
-    );
-    if (!confirmed) return;
-
-    const res = await fetch(`${API_URL}/notes/${id}`, {
-      method: "DELETE",
-    });
-
-    if (res.ok) {
-      setNotes(notes.filter((note) => note.id !== id));
-    }
+  const downloadNote = (note: Note) => {
+    const content = `# ${note.title}\n\n${note.content}`;
+    const blob = new Blob([content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${note.title.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
+  const downloadAllNotes = () => {
+    const content = notes
+      .map((note) => `# ${note.title}\n\n${note.content}\n\n---\n`)
+      .join("\n");
+    const blob = new Blob([content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `all_notes_${new Date().toISOString().split("T")[0]}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <div className="min-h-screen bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white p-4 max-w-3xl mx-auto">
-      <header className="mb-6 text-center">
-        <h1 className="text-3xl font-semibold">Notes</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Markdown note taking
-        </p>
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={toggleTheme}
-            className="cursor-pointer disabled:cursor-auto px-3 py-1 text-sm rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700"
-          >
-            Switch to {isDarkMode ? "Light" : "Dark"} Mode
-          </button>
-        </div>
-      </header>
+    <div className="flex flex-col h-screen bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white">
+      <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
 
       {hasError && (
-        <div className="mb-4 flex items-center justify-between text-sm text-red-600 bg-red-100 border border-red-300 rounded p-3 dark:bg-red-900 dark:text-red-200 dark:border-red-600">
-          <span>Cannot connect to backend. Please check your server.</span>
-          <button
-            onClick={fetchNotes}
-            disabled={isFetching}
-            className="cursor-pointer disabled:cursor-auto ml-4 text-xs px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
-          >
-            {isFetching ? "Retrying..." : "Retry"}
-          </button>
+        <div className="px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+          <div className="mb-4 flex items-center justify-between text-sm text-red-600 bg-red-100 border border-red-300 rounded p-3 dark:bg-red-900 dark:text-red-200 dark:border-red-600">
+            <span>Cannot connect to backend. Please check your server.</span>
+            <button
+              onClick={fetchNotes}
+              disabled={isFetching}
+              className="ml-4 text-xs px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+            >
+              {isFetching ? "Retrying..." : "Retry"}
+            </button>
+          </div>
         </div>
       )}
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-        {/* Form */}
-        <div className="space-y-4">
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
-            className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800"
-          />
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Write your note here..."
-            className="w-full h-64 px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 resize-none"
-          />
-          <button
-            onClick={editingNoteId ? updateNote : createNote}
-            disabled={isCreating || !title.trim() || !content.trim()}
-            className="cursor-pointer disabled:cursor-auto flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-900 text-white disabled:bg-zinc-400 dark:bg-white dark:text-black"
-          >
-            {isCreating
-              ? editingNoteId
-                ? "Updating..."
-                : "Creating..."
-              : editingNoteId
-              ? "Update Note"
-              : "Create Note"}
-          </button>
+      <div className="flex flex-1 min-h-0 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pb-4 gap-4 flex-col md:flex-row">
+        <NoteSidebar
+          notes={notes}
+          editingNoteId={activeNote?.id || null}
+          onEdit={editNote}
+          onDelete={setDeleteId}
+          onDownload={downloadNote}
+          onDownloadAll={downloadAllNotes}
+        />
 
-          {editingNoteId && (
-            <button
-              onClick={() => {
-                setEditingNoteId(null);
-                setTitle("");
-                setContent("");
-              }}
-              className="text-sm text-zinc-500 hover:text-zinc-800 dark:hover:text-white underline cursor-pointer disabled:cursor-auto"
-            >
-              Cancel editing
-            </button>
-          )}
-        </div>
-
-        {/* Live preview */}
-        <div className="border border-zinc-300 dark:border-zinc-700 rounded-md p-4 bg-white dark:bg-zinc-800">
-          <h3 className="text-sm font-medium text-zinc-500 mb-2">
-            Live Preview
-          </h3>
-          <div className="prose dark:prose-invert prose-zinc max-w-none overflow-y-auto max-h-92">
-            <ReactMarkdown>{content}</ReactMarkdown>
-          </div>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        {notes.length === 0 ? (
-          <p className="text-center text-zinc-400">No notes yet.</p>
-        ) : (
-          notes.map((note) => (
-            <div
-              key={note.id}
-              className={`border border-zinc-300 dark:border-zinc-700 rounded-md p-4 transition-all ${
-                editingNoteId === note.id
-                  ? "ring-2 ring-blue-500 border-blue-300 dark:border-blue-400"
-                  : ""
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="font-semibold text-zinc-500 text-md font-mono truncate">
-                  {note.title}
-                </h2>
-                <div className="flex items-center">
-                  <button
-                    onClick={() => {
-                      setEditingNoteId(note.id);
-                      setTitle(note.title);
-                      setContent(note.content);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                    className="text-zinc-400 hover:text-blue-500 cursor-pointer text-sm"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteNote(note.id)}
-                    className="text-zinc-400 hover:text-red-500 cursor-pointer ml-4"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="prose dark:prose-invert prose-zinc max-w-none">
-                <ReactMarkdown>{note.content}</ReactMarkdown>
+        <main className="flex-1 min-h-0 overflow-y-auto">
+          {!showForm ? (
+            <div className="flex items-center justify-center md:h-full py-40">
+              <div className="text-center text-zinc-500 dark:text-zinc-400 space-y-4">
+                <div className="text-lg font-medium">No note selected</div>
+                <button
+                  onClick={createNew}
+                  className="text-sm px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
+                >
+                  + New Note
+                </button>
               </div>
             </div>
-          ))
-        )}
-      </section>
+          ) : (
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:h-full">
+              <div className="overflow-y-auto min-h-0">
+                <NoteForm
+                  {...form}
+                  setTitle={(title) => setForm((f) => ({ ...f, title }))}
+                  setContent={(content) => setForm((f) => ({ ...f, content }))}
+                  onSubmit={saveNote}
+                  isSaving={isSaving}
+                  isEditing={isEditing}
+                  isCreating={isCreating}
+                  cancelEdit={resetForm}
+                />
+              </div>
+              <div className="overflow-y-auto min-h-0">
+                <NotePreview content={form.content} />
+              </div>
+            </section>
+          )}
+        </main>
+      </div>
+
+      <ConfirmDialog
+        open={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        title="Delete note?"
+        description="This will permanently delete the note. Are you sure?"
+      />
     </div>
   );
 }
