@@ -8,20 +8,54 @@ type Note = {
   content: string;
 };
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+
 function App() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [hasError, setHasError] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    const useDark = storedTheme === "dark" || (!storedTheme && prefersDark);
+
+    document.documentElement.classList.toggle("dark", useDark);
+    setIsDarkMode(useDark);
+  }, []);
+
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    const newTheme = isDarkMode ? "light" : "dark";
+    html.classList.toggle("dark", newTheme === "dark");
+    setIsDarkMode(newTheme === "dark");
+    localStorage.setItem("theme", newTheme);
+  };
 
   const fetchNotes = async () => {
+    setIsFetching(true);
     try {
-      const res = await fetch("http://localhost:8080/api/notes");
+      const res = await fetch(`${API_URL}/notes`);
+      if (!res.ok) throw new Error("Server error");
       const data = await res.json();
       setNotes(data);
+      setHasError(false);
     } catch (err) {
       console.error("Failed to fetch notes", err);
+      setHasError(true);
+    } finally {
+      setIsFetching(false);
     }
   };
 
@@ -29,7 +63,7 @@ function App() {
     if (!title.trim() || !content.trim()) return;
     setIsCreating(true);
     try {
-      const res = await fetch("http://localhost:8080/api/notes", {
+      const res = await fetch(`${API_URL}/notes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, content }),
@@ -49,14 +83,11 @@ function App() {
     if (!editingNoteId || !title.trim() || !content.trim()) return;
     setIsCreating(true);
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/notes/${editingNoteId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, content }),
-        }
-      );
+      const res = await fetch(`${API_URL}/notes/${editingNoteId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content }),
+      });
 
       if (res.ok) {
         setTitle("");
@@ -75,7 +106,7 @@ function App() {
     );
     if (!confirmed) return;
 
-    const res = await fetch(`http://localhost:8080/api/notes/${id}`, {
+    const res = await fetch(`${API_URL}/notes/${id}`, {
       method: "DELETE",
     });
 
@@ -95,7 +126,28 @@ function App() {
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           Markdown note taking
         </p>
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={toggleTheme}
+            className="cursor-pointer disabled:cursor-auto px-3 py-1 text-sm rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+          >
+            Switch to {isDarkMode ? "Light" : "Dark"} Mode
+          </button>
+        </div>
       </header>
+
+      {hasError && (
+        <div className="mb-4 flex items-center justify-between text-sm text-red-600 bg-red-100 border border-red-300 rounded p-3 dark:bg-red-900 dark:text-red-200 dark:border-red-600">
+          <span>Cannot connect to backend. Please check your server.</span>
+          <button
+            onClick={fetchNotes}
+            disabled={isFetching}
+            className="cursor-pointer disabled:cursor-auto ml-4 text-xs px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+          >
+            {isFetching ? "Retrying..." : "Retry"}
+          </button>
+        </div>
+      )}
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
         {/* Form */}
@@ -134,7 +186,7 @@ function App() {
                 setTitle("");
                 setContent("");
               }}
-              className="text-sm text-zinc-500 hover:text-zinc-800 dark:hover:text-white underline"
+              className="text-sm text-zinc-500 hover:text-zinc-800 dark:hover:text-white underline cursor-pointer disabled:cursor-auto"
             >
               Cancel editing
             </button>
@@ -159,7 +211,11 @@ function App() {
           notes.map((note) => (
             <div
               key={note.id}
-              className="border border-zinc-300 dark:border-zinc-700 rounded-md p-4"
+              className={`border border-zinc-300 dark:border-zinc-700 rounded-md p-4 transition-all ${
+                editingNoteId === note.id
+                  ? "ring-2 ring-blue-500 border-blue-300 dark:border-blue-400"
+                  : ""
+              }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <h2 className="font-semibold text-zinc-500 text-md font-mono truncate">

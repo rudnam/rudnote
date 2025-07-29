@@ -21,19 +21,19 @@ services:
       POSTGRES_PASSWORD: notedpass
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     networks:
       - app
-    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U noteduser -d notedb"]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   frontend:
     build: ./frontend
+    environment:
+      - VITE_API_URL=http://backend:8080/api
     ports:
       - "3000:3000"
     depends_on:
