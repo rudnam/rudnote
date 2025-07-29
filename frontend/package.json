@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@milkdown/kit": "^7.15.2",
+    "@milkdown/react": "^7.15.2",
     "@tailwindcss/vite": "^4.1.11",
     "clsx": "^2.1.1",
     "lucide-react": "^0.528.0",

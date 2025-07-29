@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Header from "./components/Header";
 import NoteForm from "./components/NoteForm";
-import NotePreview from "./components/NotePreview";
 import ConfirmDialog from "./components/ConfirmDialog";
 import NoteSidebar from "./components/NoteSidebar";
 import { useTheme } from "./hooks/useTheme";
@@ -143,23 +142,19 @@ function App() {
               </div>
             </div>
           ) : (
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:h-full">
-              <div className="overflow-y-auto min-h-0">
-                <NoteForm
-                  {...form}
-                  setTitle={(title) => setForm((f) => ({ ...f, title }))}
-                  setContent={(content) => setForm((f) => ({ ...f, content }))}
-                  onSubmit={saveNote}
-                  isSaving={isSaving}
-                  isEditing={isEditing}
-                  isCreating={isCreating}
-                  cancelEdit={resetForm}
-                />
-              </div>
-              <div className="overflow-y-auto min-h-0">
-                <NotePreview content={form.content} />
-              </div>
-            </section>
+            <div className="max-w-screen-sm mx-auto w-full space-y-6">
+              <NoteForm
+                {...form}
+                setTitle={(title) => setForm((f) => ({ ...f, title }))}
+                setContent={(content) => setForm((f) => ({ ...f, content }))}
+                onSubmit={saveNote}
+                isSaving={isSaving}
+                isEditing={isEditing}
+                isCreating={isCreating}
+                cancelEdit={resetForm}
+                noteId={activeNote?.id ?? null}
+              />
+            </div>
           )}
         </main>
       </div>

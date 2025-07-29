@@ -1,4 +1,4 @@
-import type { Note } from "../types";
+import type { Note, NotePayload } from "../types";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
@@ -8,7 +8,7 @@ export const fetchNotesAPI = async (): Promise<Note[]> => {
   return res.json();
 };
 
-export const createNoteAPI = async (note: Omit<Note, "id">): Promise<Note> => {
+export const createNoteAPI = async (note: NotePayload): Promise<Note> => {
   const res = await fetch(`${API_URL}/notes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -22,7 +22,7 @@ export const createNoteAPI = async (note: Omit<Note, "id">): Promise<Note> => {
   return await res.json();
 };
 
-export const updateNoteAPI = async (id: string, note: Omit<Note, "id">) => {
+export const updateNoteAPI = async (id: string, note: NotePayload) => {
   return fetch(`${API_URL}/notes/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

@@ -1,3 +1,5 @@
+import { MilkdownEditor } from "./MilkdownEditor";
+
 type Props = {
   title: string;
   content: string;
@@ -8,6 +10,7 @@ type Props = {
   isCreating: boolean;
   isEditing: boolean;
   cancelEdit: () => void;
+  noteId: string | null;
 };
 
 export default function NoteForm({
@@ -20,6 +23,7 @@ export default function NoteForm({
   isCreating,
   isEditing,
   cancelEdit,
+  noteId,
 }: Props) {
   const disabled = isSaving || !title.trim() || !content.trim();
   const actionLabel = isSaving
@@ -32,26 +36,11 @@ export default function NoteForm({
 
   return (
     <div className="space-y-4 flex flex-col md:h-full">
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Title"
-        className="w-full px-3 py-2 rounded-md bg-white dark:bg-zinc-800 text-black dark:text-white border border-zinc-300 dark:border-zinc-700 focus:outline-none"
-      />
-
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Write your note here..."
-        className="grow w-full h-96 px-3 py-2 rounded-md bg-white dark:bg-zinc-800 text-black dark:text-white border border-zinc-300 dark:border-zinc-700 resize-none focus:outline-none"
-      />
-
       <div className="flex gap-4">
         <button
           onClick={onSubmit}
           disabled={disabled}
-          className="cursor-pointer disabled:cursor-not-allowed flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-900 text-white disabled:bg-zinc-400 dark:bg-white dark:text-black"
+          className="text-sm cursor-pointer disabled:cursor-not-allowed flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-900 text-white disabled:bg-zinc-400 dark:bg-white dark:text-black"
         >
           {actionLabel}
         </button>
@@ -66,6 +55,19 @@ export default function NoteForm({
           </button>
         )}
       </div>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+        className="w-full px-3 py-2 rounded-md bg-white dark:bg-zinc-800 text-black dark:text-white border border-zinc-300 dark:border-zinc-700 focus:outline-none"
+      />
+
+      <MilkdownEditor
+        value={content}
+        onChange={(val) => setContent(val)}
+        noteId={noteId}
+      />
     </div>
   );
 }

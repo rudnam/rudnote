@@ -5,7 +5,7 @@ import {
   updateNoteAPI,
   deleteNoteAPI,
 } from "../lib/api";
-import type { Note } from "../types";
+import type { Note, NotePayload } from "../types";
 
 export function useNotes() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -16,7 +16,13 @@ export function useNotes() {
     setIsFetching(true);
     try {
       const data = await fetchNotesAPI();
-      setNotes(data);
+
+      const sorted = data.sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      );
+
+      setNotes(sorted);
       setHasError(false);
     } catch {
       setHasError(true);
@@ -25,20 +31,20 @@ export function useNotes() {
     }
   };
 
-  const createNote = async (note: Omit<Note, "id">): Promise<Note> => {
+  const createNote = async (note: NotePayload): Promise<Note> => {
     const newNote = await createNoteAPI(note);
     await fetchNotes();
     return newNote;
   };
 
-  const updateNote = async (id: string, note: Omit<Note, "id">) => {
+  const updateNote = async (id: string, note: NotePayload) => {
     await updateNoteAPI(id, note);
     await fetchNotes();
   };
 
   const deleteNote = async (id: string) => {
     await deleteNoteAPI(id);
-    setNotes(notes.filter((n) => n.id !== id));
+    setNotes((prev) => prev.filter((n) => n.id !== id));
   };
 
   useEffect(() => {

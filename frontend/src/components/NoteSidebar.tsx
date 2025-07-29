@@ -25,7 +25,7 @@ export default function NoteSidebar({
 
   const handleSelect = (note: Note) => {
     onEdit(note);
-    setMobileOpen(false); // close on mobile
+    setMobileOpen(false);
   };
 
   return (
