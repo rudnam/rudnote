@@ -9,8 +9,8 @@ RUN npm install -g serve
 COPY . .
 RUN npm run build
 
-EXPOSE 80
+EXPOSE 3000
 
-HEALTHCHECK CMD wget --spider --quiet http://localhost:80 || exit 1
+HEALTHCHECK CMD wget --spider --quiet http://localhost:3000 || exit 1
 
-CMD [ "serve", "-s", "dist" ]
+CMD ["serve", "-s", "dist"]

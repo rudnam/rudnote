@@ -8,6 +8,6 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 
-HEALTHCHECK CMD wget --spider --quiet http://localhost:8080/health || exit 1
+HEALTHCHECK CMD wget --spider --quiet http://localhost:8080/actuator/health || exit 1
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
