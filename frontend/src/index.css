@@ -4,7 +4,7 @@
 
 @layer base {
   button {
-    @apply cursor-pointer transition-colors;
+    @apply cursor-pointer;
   }
 }
 
@@ -20,4 +20,20 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.ProseMirror
+  p:first-child:only-child:has(br.ProseMirror-trailingBreak)::before {
+  content: "Start typing...";
+  color: #9ca3af; /* gray-400 */
+  @apply text-zinc-500 dark:text-zinc-400;
+  pointer-events: none;
+  position: absolute;
+  user-select: none;
 }

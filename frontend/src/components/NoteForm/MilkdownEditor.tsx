@@ -43,13 +43,17 @@ const MilkdownEditorInner = ({ value, onChange, noteId }: Props) => {
     <div
       className={`
         milkdown-editor-wrapper 
-        bg-white dark:bg-zinc-800 
         text-zinc-900 dark:text-white 
-        border border-zinc-300 dark:border-zinc-700 
-        rounded-xl p-4 shadow-sm 
+        rounded-xl p-4
         prose dark:prose-invert max-w-none 
         [&_.ProseMirror:focus]:outline-none 
         [&_.ProseMirror:focus-visible]:outline-none
+        min-h-full
+
+        [&_.ProseMirror]:min-h-[70vh]
+        [&_.ProseMirror]:h-full 
+        [&_.ProseMirror]:w-full 
+        [&_.ProseMirror]:cursor-text
       `}
     >
       <Milkdown />

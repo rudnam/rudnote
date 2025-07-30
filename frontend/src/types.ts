@@ -7,3 +7,8 @@ export type Note = {
 };
 
 export type NotePayload = Omit<Note, "id" | "createdAt" | "updatedAt">;
+
+export type NoteForm = {
+  title: string;
+  content: string;
+};

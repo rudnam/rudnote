@@ -26,7 +26,7 @@ export default function NoteActionsDropdown({ onDelete, onDownload }: Props) {
         aria-label="More actions"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className="text-zinc-400 hover:text-black dark:hover:text-white p-1 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+        className="text-zinc-400 hover:text-black dark:hover:text-white p-1 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700"
       >
         <MoreVertical className="w-5 h-5" />
       </button>

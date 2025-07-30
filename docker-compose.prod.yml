@@ -1,0 +1,63 @@
+services:
+  backend:
+    image: rudnam/notes-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/notedb
+      SPRING_DATASOURCE_USERNAME: noteduser
+      SPRING_DATASOURCE_PASSWORD: notedpass
+    depends_on:
+      - db
+    networks:
+      - app
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: notedb
+      POSTGRES_USER: noteduser
+      POSTGRES_PASSWORD: notedpass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U noteduser -d notedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  frontend:
+    image: rudnam/notes-frontend
+    environment:
+      - VITE_API_URL=/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app
+    restart: unless-stopped
+
+  caddy:
+    image: rudnam/notes-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - app
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app:

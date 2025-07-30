@@ -26,32 +26,25 @@ docker compose up --build
 cd ./frontend
 ```
 
-2. Create an `.env` file in `/frontend/.env` and copy contents from `.env.example`
-
-```env
-# .env for local development
-VITE_API_URL=http://localhost:8080/api
-```
-
-3. Run the backend
+2. Run the backend
 
 ```shell
 docker compose up --build backend db
 ```
 
-4. Install dependencies
+3. Install dependencies
 
 ```shell
 npm install
 ```
 
-5. Start the frontend dev server
+4. Start the frontend dev server
 
 ```shell
 npm run dev
 ```
 
-6. Stop backend when done
+5. Stop backend when done
 
 ```shell
 docker compose down
