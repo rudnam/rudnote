@@ -14,7 +14,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:5173", "http://localhost:3000",
-                                "https://notes.rudnam.com", "https://md.rudnam.com")
+                                "https://notes.rudnam.com")
                         .allowedMethods("*");
             }
         };
