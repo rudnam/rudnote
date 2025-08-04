@@ -26,14 +26,14 @@ jobs:
           context: .
           file: ./Dockerfile.caddy
           push: ${{ github.event_name != 'pull_request' }}
-          tags: rudnam/notes-caddy:latest
+          tags: rudnam/notes-caddy
 
       - name: Build and push Frontend image
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: ${{ github.event_name != 'pull_request' }}
-          tags: rudnam/notes-frontend:latest
+          tags: rudnam/notes-frontend
           build-args: |
             VITE_API_URL=/api
 
@@ -42,7 +42,7 @@ jobs:
         with:
           context: ./backend
           push: ${{ github.event_name != 'pull_request' }}
-          tags: rudnam/notes-backend:latest
+          tags: rudnam/notes-backend
 
   deploy:
     name: Deploy to EC2
