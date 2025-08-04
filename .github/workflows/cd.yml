@@ -21,7 +21,7 @@ jobs:
           SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           HOST: ${{ secrets.EC2_HOST }}
           USER: ${{ secrets.EC2_USER }}
-          DEPLOY_PATH: /home/ubuntu/deployments/rudnam-notes
+          DEPLOY_PATH: /home/ubuntu/deployments/rudnote
         run: |
           echo "$SSH_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
 

@@ -87,7 +87,7 @@ jobs:
       - name: Wait for db to be ready
         run: |
           for i in {1..10}; do
-            if docker exec $(docker ps -qf "name=db") pg_isready -U noteduser -d notedb; then
+            if docker exec $(docker ps -qf "name=db") pg_isready -U rudnote_user -d rudnote_db; then
               echo "Database is ready"
               exit 0
             fi
@@ -131,7 +131,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: rudnam/notes-backend:latest
+          tags: rudnam/rudnote-backend:latest
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5
@@ -140,7 +140,7 @@ jobs:
           push: true
           build-args: |
             VITE_API_URL=/api
-          tags: rudnam/notes-frontend:latest
+          tags: rudnam/rudnote-frontend:latest
 
       - name: Build and push caddy
         uses: docker/build-push-action@v5
@@ -148,4 +148,4 @@ jobs:
           context: .
           file: ./Dockerfile.caddy
           push: true
-          tags: rudnam/notes-caddy:latest
+          tags: rudnam/rudnote-caddy:latest

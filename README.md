@@ -1,11 +1,11 @@
-# rudnam-notes
+# rudnote
 
 ## Set up project
 
 1. Clone the repository
 
 ```bash
-git clone https://github.com/rudnam/rudnam-notes.git
+git clone https://github.com/rudnam/rudnote.git
 ```
 
 2. Run the app using Docker

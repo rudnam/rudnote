@@ -4,9 +4,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/notedb
-      SPRING_DATASOURCE_USERNAME: noteduser
-      SPRING_DATASOURCE_PASSWORD: notedpass
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/rudnote_db
+      SPRING_DATASOURCE_USERNAME: rudnote_user
+      SPRING_DATASOURCE_PASSWORD: rudnote_pass
     depends_on:
       - db
     networks:
@@ -16,9 +16,9 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: notedb
-      POSTGRES_USER: noteduser
-      POSTGRES_PASSWORD: notedpass
+      POSTGRES_DB: rudnote_db
+      POSTGRES_USER: rudnote_user
+      POSTGRES_PASSWORD: rudnote_pass
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -26,7 +26,7 @@ services:
     networks:
       - app
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U noteduser -d notedb"]
+      test: ["CMD-SHELL", "pg_isready -U rudnote_user -d rudnote_db"]
       interval: 10s
       timeout: 5s
       retries: 5

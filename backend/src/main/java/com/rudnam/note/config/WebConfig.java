@@ -1,4 +1,4 @@
-package com.rudnam.notes.config;
+package com.rudnam.note.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:5173", "http://localhost:3000",
-                                "https://notes.rudnam.com")
+                                "https://note.rudnam.com")
                         .allowedMethods("*");
             }
         };
