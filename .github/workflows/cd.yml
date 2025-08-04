@@ -67,7 +67,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${USER}@${HOST} "mkdir -p ${DEPLOY_PATH}"
 
           # Copy docker-compose and other deployment files
-          scp -o StrictHostKeyChecking=no -i github-ec2.pem docker-compose.prod.yml ${USER}@${HOST}:${DEPLOY_PATH}/docker-compose.yml
+          scp -o StrictHostKeyChecking=no -i github-ec2.pem docker-compose.prod.yml ${USER}@${HOST}:${DEPLOY_PATH}/docker-compose.prod.yml
           scp -o StrictHostKeyChecking=no -i github-ec2.pem .env.prod ${USER}@${HOST}:${DEPLOY_PATH}/.env || echo "No .env.prod file found, skipping..."
 
           # Deploy on EC2
