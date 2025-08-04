@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +31,8 @@ public class User {
     @JsonIgnore
     private List<Post> posts;
 
-    public User() {}
+    public User() {
+    }
 
     public UUID getId() {
         return id;
