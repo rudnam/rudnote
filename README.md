@@ -4,15 +4,15 @@
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/rudnam/rudnote.git
-```
+    ```bash
+    git clone https://github.com/rudnam/rudnote.git
+    ```
 
 2. Run the app using Docker
 
-```bash
-docker compose up --build
-```
+    ```bash
+    docker compose up --build
+    ```
 
 3. Visit the app at: http://localhost:3000
 
@@ -22,40 +22,40 @@ docker compose up --build
 
 1. Navigate to the frontend directory
 
-```shell
-cd ./frontend
-```
+    ```bash
+    cd ./frontend
+    ```
 
 2. Run the backend
 
-```shell
-docker compose up --build backend db
-```
+    ```bash
+    docker compose up --build backend db
+    ```
 
 3. Install dependencies
 
-```shell
-npm install
-```
+    ```bash
+    npm install
+    ```
 
 4. Start the frontend dev server
 
-```shell
-npm run dev
-```
+    ```bash
+    npm run dev
+    ```
 
 5. Stop backend when done
 
-```shell
-docker compose down
-# Or, to also delete database data:
-docker compose down -v
-```
+    ```bash
+    docker compose down
+    # Or, to also delete database data:
+    docker compose down -v
+    ```
 
 ### For Backend
 
 1. Navigate to the backend directory
 
-```shell
-cd ./backend
-```
+    ```bash
+    cd ./backend
+    ```

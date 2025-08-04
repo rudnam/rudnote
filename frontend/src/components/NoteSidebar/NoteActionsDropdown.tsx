@@ -36,7 +36,7 @@ export default function NoteActionsDropdown({ onDelete, onDownload }: Props) {
           <button
             onClick={() => onDownload()}
             className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-zinc-900 dark:text-white hover:bg-red-50 dark:hover:bg-zinc-700"
-            title="Download note"
+            title="Download post"
           >
             <Download className="w-4 h-4" />
             Download

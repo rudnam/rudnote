@@ -1,4 +1,4 @@
-note.rudnam.com {
+post.rudnam.com {
 
   handle /api/* {
     reverse_proxy backend:8080
