@@ -81,6 +81,23 @@ jobs:
           distribution: "temurin"
           java-version: "21"
 
+      - name: Set up db
+        run: docker compose up -d db
+
+      - name: Wait for db to be ready
+        run: |
+          for i in {1..10}; do
+            if docker exec $(docker ps -qf "name=db") pg_isready -U noteduser -d notedb; then
+              echo "Database is ready"
+              exit 0
+            fi
+            echo "Waiting for database to be ready..."
+            sleep 2
+          done
+          echo "Database did not become ready in time."
+          docker compose logs db
+          exit 1
+
       - name: Test
         run: |
           ./mvnw clean verify -DskipTests=false -Dmaven.test.failure.ignore=true
