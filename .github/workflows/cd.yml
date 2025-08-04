@@ -1,16 +1,16 @@
-name: Build & Deploy to EC2
+name: CD
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
 
 jobs:
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout repository
