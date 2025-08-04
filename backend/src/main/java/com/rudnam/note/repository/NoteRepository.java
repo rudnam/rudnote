@@ -1,7 +1,8 @@
-package com.rudnam.notes.repository;
+package com.rudnam.note.repository;
 
-import com.rudnam.notes.models.Note;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.rudnam.note.models.Note;
 
 import java.util.UUID;
 

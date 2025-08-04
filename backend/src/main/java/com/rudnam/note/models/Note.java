@@ -1,4 +1,4 @@
-package com.rudnam.notes.models;
+package com.rudnam.note.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

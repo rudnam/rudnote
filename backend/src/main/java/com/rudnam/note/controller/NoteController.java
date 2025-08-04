@@ -1,7 +1,7 @@
-package com.rudnam.notes.controller;
+package com.rudnam.note.controller;
 
-import com.rudnam.notes.models.Note;
-import com.rudnam.notes.repository.NoteRepository;
+import com.rudnam.note.models.Note;
+import com.rudnam.note.repository.NoteRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

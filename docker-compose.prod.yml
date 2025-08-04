@@ -1,6 +1,6 @@
 services:
   backend:
-    image: rudnam/rudnote-backend
+    image: rudnam/rudnote-backend:latest
     ports:
       - "8080:8080"
     environment:
@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: rudnam/rudnote-frontend
+    image: rudnam/rudnote-frontend:latest
     environment:
       - VITE_API_URL=/api
     ports:
@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
 
   caddy:
-    image: rudnam/rudnote-caddy
+    image: rudnam/rudnote-caddy:latest
     ports:
       - "80:80"
       - "443:443"
