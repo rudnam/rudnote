@@ -55,6 +55,7 @@ const MilkdownEditorInner = ({ value, onChange, noteId }: Props) => {
         [&_.ProseMirror]:w-full 
         [&_.ProseMirror]:cursor-text
       `}
+      data-testid="editor"
     >
       <Milkdown />
     </div>
