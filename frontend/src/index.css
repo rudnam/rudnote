@@ -8,10 +8,20 @@
   }
 }
 
-
 @theme {
-  --font-sans: "Inter", "sans-serif";
-  --font-serif: "Lora", "serif";
+  --font-sans: "Inter", "Noto Sans JP", "sans-serif";
+  --font-serif: "Lora", "Noto Serif JP", "serif";
+}
+
+@utility prose {
+    blockquote {
+        p {
+            &:first-of-type::before,
+            &:last-of-type::after {
+                content: none;
+            }
+        }
+    }
 }
 
 :root {
@@ -32,7 +42,7 @@ body,
 .ProseMirror
   p:first-child:only-child:has(br.ProseMirror-trailingBreak)::before {
   content: "Start typing...";
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af;
   @apply text-zinc-500 dark:text-zinc-400;
   pointer-events: none;
   position: absolute;

@@ -18,21 +18,38 @@ export type Post = {
     title: string;
     slug: string;
     content: string;
+    summary: string;
     status: "DRAFT" | "PUBLISHED";
     createdAt: string;
     updatedAt: string;
-    publishedAt?: string;
-    author: Author;
+    publishedAt: string;
+    author: User;
 };
 
 export type PostData = {
     title: string;
     slug: string;
+    summary: string;
     content: string;
     status: "DRAFT" | "PUBLISHED";
 };
 
-export type Author = {
+export type User = {
   id: string;
   username: string;
+  displayName: string;
+  bio: string;
+  avatarUrl: string;
+  websiteUrl: string;
+  location: string;
+  createdAt: string;
+  deactivated: boolean;
+}
+
+export type Comment = {
+  id: string;
+  content: string;
+  createdAt: string;
+  author: User;
+  post: Post;
 }

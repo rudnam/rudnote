@@ -12,14 +12,17 @@ export const Auth = () => {
     const { token, login, register, error, logout } = useAuth();
 
     const handleSubmit = async () => {
-        const success = isRegistering
+        isRegistering
             ? await register(email, password, username)
             : await login(email, password);
 
-        if (success) {
-            navigate("/");
-            window.location.reload();
-        }
+        navigate("/");
+        window.location.reload();
+    };
+
+    const handleLogout = () => {
+        logout();
+        window.location.reload();
     };
 
     return (
@@ -83,7 +86,7 @@ export const Auth = () => {
                 <section className="space-y-4 text-center">
                     <p className="text-green-600">Logged in!</p>
                     <button
-                        onClick={logout}
+                        onClick={handleLogout}
                         className="mt-4 py-2 px-4 bg-red-500 text-white rounded text-sm"
                     >
                         Log Out

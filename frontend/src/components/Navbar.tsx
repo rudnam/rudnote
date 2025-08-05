@@ -1,9 +1,10 @@
 import { Newspaper } from "lucide-react";
 import { Link } from "react-router"
 import { useAuth } from "../hooks/useAuth";
+import { ProfileButton } from "./ProfileButton";
 
 export const Navbar = () => {
-    const { token, logout } = useAuth();
+    const { token } = useAuth();
 
     return (
         <nav className="w-full flex flex-col justify-between items-center">
@@ -15,19 +16,7 @@ export const Navbar = () => {
                 <Link to="/" className="font-serif text-gray-800">
                     Rudnote
                 </Link>
-                {token ? (
-                    <button
-                        onClick={() => logout()}
-                        className="text-sm hover:bg-gray-200 px-3 py-2 rounded h-full"
-                    >
-                        Log out
-                    </button>
-                ) : (
-                    <Link to="/login" className="text-sm hover:bg-gray-200 px-3 py-2 rounded h-full">
-                        Sign in
-                    </Link>
-                )}
-
+                <ProfileButton />
             </div>
             <ul className="w-full text-center flex justify-center border-b border-gray-200">
                 <Link to="/" className="hover:bg-gray-200 text-sm font-semibold px-3 py-4">

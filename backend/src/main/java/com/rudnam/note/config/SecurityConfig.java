@@ -23,8 +23,10 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/users/register", "/api/users/login", "/actuator/health").permitAll()
+                    .requestMatchers("/actuator/health").permitAll()
+                    .requestMatchers("/api/users/**").permitAll()
                     .requestMatchers("/api/posts/**").permitAll()
+                    .requestMatchers("/api/posts/*/*/comments").permitAll() // allow /api/posts/@user/slug/comments
                     .anyRequest().authenticated()
             )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

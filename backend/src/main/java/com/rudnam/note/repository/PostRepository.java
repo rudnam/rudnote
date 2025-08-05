@@ -11,10 +11,11 @@ import java.util.UUID;
 
 public interface PostRepository extends
         JpaRepository<Post, UUID> {
-    Optional<Post> findBySlug(String slug);
 
     List<Post> findAllByAuthor(User author);
 
     List<Post> findAllByStatus(Post.Status status);
+
+    Optional<Post> findByAuthor_UsernameAndSlug(String username, String slug);
 
 }

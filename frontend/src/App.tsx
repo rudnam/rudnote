@@ -7,6 +7,7 @@ import { Studio } from "./components/Studio";
 import { BlogPostPage } from "./components/BlogPostPage";
 import { About } from "./components/About";
 import { Contact } from "./components/Contact";
+import { UserPage } from "./components/UserPage";
 
 export default function App() {
 
@@ -17,10 +18,10 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/studio" element={<Studio />} />
-        <Route path="/posts/:slug" element={<BlogPostPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-
+        <Route path="/:userSlug" element={<UserPage />} />
+        <Route path="/:userSlug/:slug" element={<BlogPostPage />} />
       </Routes>
       <Footer />
     </div>

@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import type { Post } from "../types";
-import { Link } from "react-router";
 import { fetchAllPosts } from "../services/postService";
-import { User } from "lucide-react";
-
-
+import { PostItem } from "./PostItem";
 
 export default function Home() {
-
     const [posts, setPosts] = useState<Post[]>([]);
 
     const [loading, setLoading] = useState(true);
@@ -37,23 +33,7 @@ export default function Home() {
                 ) : (
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                         {posts.map((post) => (
-                            <Link
-                                key={post.id}
-                                to={`/posts/${post.slug}`}
-                                className="block px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-200 transition-colors"
-                            >
-                                <p className="text-xs text-gray-500">
-                                    <User className="inline mr-2 bg-gray-200 rounded-full" />
-                                    {post.author.username}
-                                </p>
-                                <h3 className="text-lg font-semibold font-serif">{post.title}</h3>
-                                <p className="text-sm text-gray-600">{post.content.slice(0, 100)}</p>
-                                <p className="text-xs text-gray-500">                                    {new Date(post.publishedAt!).toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                })}</p>
-
-                            </Link>
+                            <PostItem key={post.id} post={post} />
                         ))}
                     </div>
                 )}

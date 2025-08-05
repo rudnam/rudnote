@@ -25,11 +25,30 @@ public class User {
     @JsonIgnore
     private String passwordHash;
 
+    @Column
+    private String displayName;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    @Column
+    private String avatarUrl;
+
+    @Column
+    private String websiteUrl;
+
+    @Column
+    private String location;
+
     private Instant createdAt;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Post> posts;
+
+    @Column(nullable = false)
+    private boolean deactivated = false;
+
 
     public User() {
     }
@@ -66,6 +85,46 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getWebsiteUrl() {
+        return websiteUrl;
+    }
+
+    public void setWebsiteUrl(String websiteUrl) {
+        this.websiteUrl = websiteUrl;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
@@ -80,5 +139,13 @@ public class User {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public boolean isDeactivated() {
+        return deactivated;
+    }
+
+    public void setDeactivated(boolean deactivated) {
+        this.deactivated = deactivated;
     }
 }

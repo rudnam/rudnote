@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { getUserPosts } from "../services/postService";
+import type { Post } from "../types";
 
 export function useUserPosts(token: string | null) {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 

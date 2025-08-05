@@ -17,9 +17,11 @@ public class Post {
     @NotBlank
     private String title;
 
-
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String slug;
+
+    @Column(columnDefinition = "TEXT")
+    private String summary;
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -59,6 +61,14 @@ public class Post {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getContent() {

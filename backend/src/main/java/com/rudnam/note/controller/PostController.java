@@ -39,12 +39,14 @@ public class PostController {
     }
 
 
-    @GetMapping("/{slug}")
-    public ResponseEntity<?> getPostBySlug(
+    @GetMapping("/@{username}/{slug}")
+    public ResponseEntity<?> getPostByUsernameAndSlug(
+            @PathVariable String username,
             @PathVariable String slug,
             @AuthenticationPrincipal User currentUser) {
 
-        Optional<Post> optionalPost = postRepository.findBySlug(slug);
+        Optional<Post> optionalPost = postRepository.findByAuthor_UsernameAndSlug(username, slug);
+
         if (optionalPost.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -67,6 +69,7 @@ public class PostController {
         }
 
         newPost.setTitle(newPost.getTitle());
+        newPost.setSummary(newPost.getSummary());
         newPost.setContent(newPost.getContent());
         newPost.setSlug(newPost.getSlug());
         newPost.setAuthor(user);
@@ -102,6 +105,7 @@ public class PostController {
 
         post.setTitle(updatedPost.getTitle());
         post.setSlug(updatedPost.getSlug());
+        post.setSummary(updatedPost.getSummary());
         post.setContent(updatedPost.getContent());
         if (updatedPost.getStatus() == Post.Status.PUBLISHED) {
             post.setStatus(Post.Status.PUBLISHED);

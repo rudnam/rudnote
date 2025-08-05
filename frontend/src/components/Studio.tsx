@@ -12,12 +12,14 @@ export const Studio = () => {
 
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
+    const [summary, setSummary] = useState("");
     const [content, setContent] = useState("");
     const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("DRAFT");
 
     const resetForm = () => {
         setTitle("");
         setSlug("");
+        setSummary("");
         setContent("");
         setStatus("DRAFT");
         setEditingPostId(null);
@@ -31,9 +33,9 @@ export const Studio = () => {
         }
 
         if (editingPostId) {
-            await updatePost(editingPostId, { title, slug, content, status });
+            await updatePost(editingPostId, { title, slug, summary, content, status });
         } else {
-            await createPost({ title, slug, content, status });
+            await createPost({ title, slug, summary, content, status });
         }
 
         fetchPosts();
@@ -47,6 +49,7 @@ export const Studio = () => {
         setEditingPostId(post.id);
         setTitle(post.title);
         setSlug(post.slug);
+        setSummary(post.summary ?? "");
         setContent(post.content);
         setStatus(post.status);
     };
@@ -79,7 +82,7 @@ export const Studio = () => {
                                 <li key={post.id} className="flex justify-between items-center border border-gray-300 rounded-lg px-3 py-2">
                                     <div>
                                         <h3 className="text-lg font-semibold font-serif">{post.title}</h3>
-                                        <p className="text-sm text-gray-600">{post.content.slice(0, 100)}</p>
+                                        <p className="text-sm text-gray-600">{post.summary}</p>
                                         <p className="text-xs text-gray-500">
                                             {new Date(post.publishedAt!).toLocaleDateString("en-US", {
                                                 month: "short",
@@ -113,7 +116,7 @@ export const Studio = () => {
                 </h2>
 
                 {error && <p className="text-red-600 text-sm">{error}</p>}
-                {success && <p className="text-green-600 text-sm">Post {editingPostId ? "updated" : "created"}!</p>}
+                {success && <p className="text-green-600 text-sm">Operation successful!</p>}
 
                 <input
                     placeholder="Post title"
@@ -125,6 +128,12 @@ export const Studio = () => {
                     placeholder="URL slug"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
+                    className="px-3 py-2 border rounded text-sm w-full"
+                />
+                <input
+                    placeholder="Summary"
+                    value={summary}
+                    onChange={(e) => setSummary(e.target.value)}
                     className="px-3 py-2 border rounded text-sm w-full"
                 />
                 <textarea
