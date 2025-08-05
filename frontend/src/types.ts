@@ -22,6 +22,7 @@ export type Post = {
     createdAt: string;
     updatedAt: string;
     publishedAt?: string;
+    author: Author;
 };
 
 export type PostData = {
@@ -30,3 +31,8 @@ export type PostData = {
     content: string;
     status: "DRAFT" | "PUBLISHED";
 };
+
+export type Author = {
+  id: string;
+  username: string;
+}

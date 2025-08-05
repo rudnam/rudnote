@@ -8,6 +8,7 @@
   }
 }
 
+
 @theme {
   --font-sans: "Inter", "sans-serif";
   --font-serif: "Lora", "serif";
@@ -37,3 +38,17 @@ body,
   position: absolute;
   user-select: none;
 }
+
+article {
+  @apply prose dark:prose-invert prose-img:mx-auto prose-img:my-auto;
+  @apply prose-headings:font-semibold prose-headings:font-serif;
+}
+
+html *::selection {
+  @apply bg-sky-200;
+}
+
+html.dark *::selection {
+  @apply bg-sky-950;
+}
+

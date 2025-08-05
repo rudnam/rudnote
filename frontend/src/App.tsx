@@ -11,7 +11,7 @@ import { Contact } from "./components/Contact";
 export default function App() {
 
   return (
-    <div className="App container min-h-[95dvh] min-w-full bg-gray-50 flex flex-col justify-between items-center text-gray-800">
+    <div className="App container min-h-dvh min-w-full bg-gray-50 flex flex-col justify-between items-center text-gray-800">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
