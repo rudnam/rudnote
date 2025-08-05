@@ -1,7 +1,7 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production --no-cache
+RUN npm ci --no-cache
 ARG VITE_API_URL=http://localhost:8080/api
 ENV VITE_API_URL=$VITE_API_URL
 COPY . .
