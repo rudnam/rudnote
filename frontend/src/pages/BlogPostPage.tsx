@@ -45,7 +45,7 @@ export const BlogPostPage = () => {
             <div className="text-sm text-gray-500 flex items-center not-prose mb-8 border-b border-gray-200 pb-4">
                 <Link to={`/@${username}`} className="flex items-center space-x-2 h-16">
                     <img
-                        src={"https://avatars.githubusercontent.com/u/70255485?v=4"}
+                        src={post.author.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
                         alt="User Avatar"
                         className="h-10 w-10 rounded-full"
                     />
