@@ -1,22 +1,33 @@
 import { Link } from "react-router";
 import type { Post } from "../types";
+import { formatExactTime, getRelativeTime } from "../lib/utils";
 
 export const PostItem = ({ post }: { post: Post }) => {
+    const publishedAtDate = new Date(post.publishedAt);
+
     return (
         <Link
             to={`/@${post.author.username}/${post.slug}`}
-            className="block px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-200 transition-colors"
+            className="flex flex-col h-full p-3 border border-gray-300 rounded-lg hover:bg-gray-200 transition-colors space-y-2"
         >
-            <p className="text-xs text-gray-600">
-                <img src={post.author.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"} alt="User Avatar" className="inline h-6 w-6 rounded-full mr-2" />
-                {post.author.username}
+            <div>
+                <p className="text-xs text-gray-600 mb-1">
+                    <img
+                        src={post.author.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
+                        alt="User Avatar"
+                        className="inline h-6 w-6 rounded-full mr-1"
+                    />
+                    {post.author.displayName}
+                </p>
+                <h3 className="text-lg font-semibold font-serif">{post.title}</h3>
+                <p className="text-sm text-gray-600">{post.summary}</p>
+            </div>
+            <p
+                className="text-xs text-gray-500 mt-auto"
+                title={formatExactTime(publishedAtDate)}
+            >
+                {getRelativeTime(publishedAtDate)}
             </p>
-            <h3 className="text-lg font-semibold font-serif">{post.title}</h3>
-            <p className="text-sm text-gray-600">{post.summary}</p>
-            <p className="text-xs text-gray-500">{new Date(post.publishedAt!).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-            })}</p>
         </Link>
     );
-}
+};

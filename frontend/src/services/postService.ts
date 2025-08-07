@@ -7,7 +7,15 @@ export async function fetchAllPosts(): Promise<Post[]> {
     return res.json();
 }
 
-export async function getUserPosts(token: string) {
+
+export async function getPublishedPostsByUsername(username: string): Promise<Post[]> {
+    const res = await fetch(`${API_URL}/posts/@${username}`);
+    if (!res.ok) throw new Error("Failed to fetch posts");
+    return res.json();
+}
+
+
+export async function getMyPosts(token: string) {
     const res = await fetch(`${API_URL}/posts/me`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -18,3 +26,4 @@ export async function getUserPosts(token: string) {
 
     return res.json();
 }
+

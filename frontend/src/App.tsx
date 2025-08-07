@@ -1,13 +1,14 @@
 import { Route, Routes } from "react-router";
 import { Navbar } from "./components/Navbar";
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import { Footer } from "./components/Footer";
-import { Auth } from "./components/Auth";
-import { Studio } from "./components/Studio";
-import { BlogPostPage } from "./components/BlogPostPage";
-import { About } from "./components/About";
-import { Contact } from "./components/Contact";
-import { UserPage } from "./components/UserPage";
+import { Auth } from "./pages/Auth";
+import { BlogPostPage } from "./pages/BlogPostPage";
+import { About } from "./pages/About";
+import { Contact } from "./pages/Contact";
+import { UserPage } from "./pages/UserPage";
+import { StudioHome } from "./pages/StudioHome";
+import { StudioEditor } from "./pages/StudioEditor";
 
 export default function App() {
 
@@ -17,7 +18,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Auth />} />
-        <Route path="/studio" element={<Studio />} />
+        <Route path="/studio" element={<StudioHome />} />
+        <Route path="/studio/:id" element={<StudioEditor />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/:userSlug" element={<UserPage />} />

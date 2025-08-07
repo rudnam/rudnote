@@ -14,28 +14,29 @@ export type NoteForm = {
 };
 
 export type Post = {
-    id: string;
-    title: string;
-    slug: string;
-    content: string;
-    summary: string;
-    status: "DRAFT" | "PUBLISHED";
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-    author: User;
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  summary: string;
+  status: "DRAFT" | "PUBLISHED";
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  author: UserPublic;
 };
 
 export type PostData = {
-    title: string;
-    slug: string;
-    summary: string;
-    content: string;
-    status: "DRAFT" | "PUBLISHED";
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  status: "DRAFT" | "PUBLISHED";
 };
 
-export type User = {
+export type UserMe = {
   id: string;
+  email: string;
   username: string;
   displayName: string;
   bio: string;
@@ -44,12 +45,23 @@ export type User = {
   location: string;
   createdAt: string;
   deactivated: boolean;
-}
+};
+
+export type UserPublic = {
+  username: string;
+  displayName: string;
+  bio: string;
+  avatarUrl: string;
+  websiteUrl: string;
+  location: string;
+  createdAt: string;
+};
+
 
 export type Comment = {
   id: string;
   content: string;
   createdAt: string;
-  author: User;
+  author: UserPublic;
   post: Post;
 }

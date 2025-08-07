@@ -24,6 +24,8 @@ public class Comment {
 
     private Instant createdAt;
 
+    private Instant editedAt;
+
     public UUID getId() {
         return id;
     }
@@ -62,5 +64,13 @@ public class Comment {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Instant getEditedAt() {
+        return editedAt;
+    }
+
+    public void setEditedAt(Instant editedAt) {
+        this.editedAt = editedAt;
     }
 }

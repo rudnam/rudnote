@@ -26,7 +26,7 @@ public class SecurityConfig {
                     .requestMatchers("/actuator/health").permitAll()
                     .requestMatchers("/api/users/**").permitAll()
                     .requestMatchers("/api/posts/**").permitAll()
-                    .requestMatchers("/api/posts/*/*/comments").permitAll() // allow /api/posts/@user/slug/comments
+                    .requestMatchers("/api/comments/**").permitAll()
                     .anyRequest().authenticated()
             )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

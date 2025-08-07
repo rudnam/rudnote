@@ -16,7 +16,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/posts/@{username}/{postId}/comments")
 public class CommentController {
 
     private final CommentRepository commentRepository;
@@ -27,7 +26,7 @@ public class CommentController {
         this.postRepository = postRepository;
     }
 
-    @GetMapping
+    @GetMapping("/api/posts/@{username}/{postId}/comments")
     public ResponseEntity<?> getComments(@PathVariable UUID postId) {
         Optional<Post> post = postRepository.findById(postId);
         if (post.isEmpty()) {
@@ -37,15 +36,11 @@ public class CommentController {
         return ResponseEntity.ok(commentRepository.findAllByPost(post.get()));
     }
 
-    @PostMapping
+    @PostMapping("/api/posts/@{username}/{postId}/comments")
     public ResponseEntity<?> addComment(
             @PathVariable UUID postId,
             @RequestBody Map<String, String> body,
             @AuthenticationPrincipal User user) {
-
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
-        }
 
         Optional<Post> postOpt = postRepository.findById(postId);
         if (postOpt.isEmpty()) {
@@ -66,4 +61,54 @@ public class CommentController {
         Comment saved = commentRepository.save(comment);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
+
+    @PatchMapping("/api/comments/{commentId}")
+    public ResponseEntity<?> updateComment(
+            @PathVariable UUID commentId,
+            @RequestBody Map<String, String> body,
+            @AuthenticationPrincipal User user) {
+
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        if (commentOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Comment comment = commentOpt.get();
+
+        if (!comment.getAuthor().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only edit your own comments.");
+        }
+
+        String newContent = body.get("content");
+        if (newContent == null || newContent.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Content cannot be empty.");
+        }
+
+        comment.setContent(newContent);
+        comment.setEditedAt(Instant.now());
+
+        commentRepository.save(comment);
+        return ResponseEntity.ok(comment);
+    }
+
+    @DeleteMapping("/api/comments/{commentId}")
+    public ResponseEntity<?> deleteComment(
+            @PathVariable UUID commentId,
+            @AuthenticationPrincipal User user) {
+
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        if (commentOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Comment comment = commentOpt.get();
+
+        if (!comment.getAuthor().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only delete your own comments.");
+        }
+
+        commentRepository.delete(comment);
+        return ResponseEntity.noContent().build();
+    }
+
 }

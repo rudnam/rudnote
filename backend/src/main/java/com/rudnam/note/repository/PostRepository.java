@@ -16,6 +16,8 @@ public interface PostRepository extends
 
     List<Post> findAllByStatus(Post.Status status);
 
+    List<Post> findAllByAuthor_UsernameAndStatus(String username, Post.Status status);
+
     Optional<Post> findByAuthor_UsernameAndSlug(String username, String slug);
 
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.UUID;
 
 
 @RestController
@@ -71,13 +71,17 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(new UserProfileDTO(
+        return ResponseEntity.ok(new UserMeDTO(
+                user.getId(),
+                user.getEmail(),
                 user.getUsername(),
                 user.getDisplayName(),
                 user.getBio(),
                 user.getAvatarUrl(),
                 user.getWebsiteUrl(),
-                user.getLocation()
+                user.getLocation(),
+                user.getCreatedAt(),
+                user.isDeactivated()
         ));
     }
 
@@ -128,14 +132,15 @@ public class UserController {
         List<User> users = userRepository
                 .searchByUsernameOrDisplayName(query);
 
-        List<UserProfileDTO> result = users.stream()
-                .map(user -> new UserProfileDTO(
+        List<UserPublicDTO> result = users.stream()
+                .map(user -> new UserPublicDTO(
                         user.getUsername(),
                         user.getDisplayName(),
                         user.getBio(),
                         user.getAvatarUrl(),
                         user.getWebsiteUrl(),
-                        user.getLocation()))
+                        user.getLocation(),
+                        user.getCreatedAt()))
                 .toList();
 
         return ResponseEntity.ok(result);
@@ -150,13 +155,14 @@ public class UserController {
         }
 
         User user = userOpt.get();
-        UserProfileDTO profile = new UserProfileDTO(
+        UserPublicDTO profile = new UserPublicDTO(
                 user.getUsername(),
                 user.getDisplayName(),
                 user.getBio(),
                 user.getAvatarUrl(),
                 user.getWebsiteUrl(),
-                user.getLocation()
+                user.getLocation(),
+                user.getCreatedAt()
         );
 
         return ResponseEntity.ok(profile);
@@ -175,12 +181,25 @@ public class UserController {
             String location
     ) {}
     public record PasswordChangeRequest(String oldPassword, String newPassword) {}
-    public record UserProfileDTO(
+    public record UserMeDTO(
+            UUID id,
+            String email,
             String username,
             String displayName,
             String bio,
             String avatarUrl,
             String websiteUrl,
-            String location
+            String location,
+            Instant createdAt,
+            boolean deactivated
+    ) {}
+    public record UserPublicDTO(
+            String username,
+            String displayName,
+            String bio,
+            String avatarUrl,
+            String websiteUrl,
+            String location,
+            Instant createdAt
     ) {}
 }

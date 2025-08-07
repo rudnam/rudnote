@@ -1,20 +1,16 @@
 import { useEffect, useState } from "react";
-import { getMyPosts } from "../services/postService";
+import { getPublishedPostsByUsername } from "../services/postService";
 import type { Post } from "../types";
 
-export function useUserPosts(token: string | null) {
+export function usePublishedPosts(username: string) {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchPosts = async () => {
-        if (!token) {
-            setError("No authentication token provided");
-            setLoading(false);
-            return;
-        }
+        setLoading(true);
         try {
-            const result = await getMyPosts(token);
+            const result = await getPublishedPostsByUsername(username);
             setPosts(result);
         } catch (err: any) {
             setError(err.message || "Failed to load posts");
@@ -25,7 +21,7 @@ export function useUserPosts(token: string | null) {
 
     useEffect(() => {
         fetchPosts();
-    }, [token]);
+    }, [username]);
 
     return { fetchPosts, posts, loading, error };
 }

@@ -28,6 +28,12 @@ public class PostController {
         return postRepository.findAllByStatus(Post.Status.PUBLISHED);
     }
 
+    @GetMapping("/@{username}")
+    public ResponseEntity<List<Post>> getPublishedPostsByUser(@PathVariable String username) {
+        List<Post> posts = postRepository.findAllByAuthor_UsernameAndStatus(username, Post.Status.PUBLISHED);
+        return ResponseEntity.ok(posts);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<?> getMyPosts(@AuthenticationPrincipal User currentUser) {
         if (currentUser == null) {
