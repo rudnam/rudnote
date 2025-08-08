@@ -19,7 +19,7 @@ export const Auth = () => {
     } = useAuthForm();
 
     return (
-        <div className="flex-1 flex flex-col items-center bg-gray-50 py-10">
+        <div className="flex-1 flex flex-col items-center bg-zinc-50 py-10">
             {!token ? (
                 <form
                     onSubmit={(e) => {
@@ -42,7 +42,7 @@ export const Auth = () => {
                                 checked={isRegistering}
                                 onChange={() => setIsRegistering(!isRegistering)}
                             />
-                            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:left-[4px] after:top-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
+                            <div className="w-11 h-6 bg-zinc-200 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:left-[4px] after:top-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:tranzinc-x-full" />
                         </label>
                         <span className="text-sm">Register</span>
                     </div>

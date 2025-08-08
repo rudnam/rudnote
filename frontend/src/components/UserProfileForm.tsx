@@ -55,7 +55,7 @@ export const UserProfileForm = ({
         <form onSubmit={handleSubmit} className="space-y-4">
             {fields.map(({ label, key, isTextarea }) => (
                 <div key={key} className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-gray-700">{label}</label>
+                    <label className="text-sm font-medium text-zinc-700">{label}</label>
                     {isTextarea ? (
                         <textarea
                             className="border rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -82,7 +82,7 @@ export const UserProfileForm = ({
                 <button
                     type="button"
                     onClick={onClose}
-                    className="px-4 py-2 text-gray-700 hover:text-black underline"
+                    className="px-4 py-2 text-zinc-700 hover:text-black underline"
                 >
                     Cancel
                 </button>

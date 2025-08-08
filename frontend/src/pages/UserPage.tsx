@@ -54,7 +54,7 @@ export const UserPage = () => {
 
             <section>
                 <h2 className="text-2xl font-semibold mb-2">Bio</h2>
-                <p className="text-gray-700 mb-4">{displayUser.bio || "No bio"}</p>
+                <p className="text-zinc-700 mb-4">{displayUser.bio || "No bio"}</p>
             </section>
 
             <UserPosts posts={posts} loading={postsLoading} error={postsError} />

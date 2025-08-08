@@ -28,6 +28,10 @@
     }
 }
 
+.text-faint {
+  @apply text-zinc-500;
+}
+
 :root {
   @apply bg-zinc-100 dark:bg-zinc-900;
 
@@ -58,11 +62,17 @@ article {
   @apply prose-headings:font-semibold prose-headings:font-serif;
 }
 
-html *::selection {
-  @apply bg-sky-200;
+.prose-h {
+  @apply font-serif font-semibold;
+  color: var(--tw-prose-headings);
 }
 
-html.dark *::selection {
-  @apply bg-sky-950;
+html *::selection {
+  @apply bg-sky-200;
+} 
+
+code *::selection,
+code::selection {
+  @apply bg-sky-900;
 }
 

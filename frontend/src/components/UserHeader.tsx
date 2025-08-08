@@ -18,7 +18,7 @@ export const UserHeader = ({
         />
         <div className="flex flex-col">
             <h1 className="text-3xl font-bold font-sans">{user.displayName || user.username}</h1>
-            <p className="text-gray-600">@{user.username}</p>
+            <p className="text-zinc-600">@{user.username}</p>
             {isOwner && (
                 <div className="flex space-x-2">
                     <button

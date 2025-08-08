@@ -54,7 +54,7 @@ export const PopoutMenu = ({
             </button>
             {open && (
                 <div
-                    className={`absolute mt-2 ${width} bg-white border border-gray-200 rounded-xl shadow-md z-50 ${align === "right" ? "right-0" : "left-0"
+                    className={`absolute mt-2 ${width} bg-white border border-zinc-200 rounded-xl shadow-md z-50 ${align === "right" ? "right-0" : "left-0"
                         }`}
                     onClick={handleItemClick}
                 >

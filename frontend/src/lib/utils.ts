@@ -1,3 +1,11 @@
+import type { Post } from "../types";
+
+export function sortPostsByDateDesc(posts: Post[]) {
+  return [...posts].sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
+}
+
 
 export function readingTime(html: string) {
   const textOnly = html.replace(/<[^>]+>/g, "");

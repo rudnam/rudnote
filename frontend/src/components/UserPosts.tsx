@@ -21,7 +21,7 @@ export const UserPosts = ({
                 {posts.length > 0 ? (
                     posts.map((post) => <PostItem key={post.id} post={post} />)
                 ) : (
-                    <li className="text-gray-600">No posts available</li>
+                    <li className="text-zinc-600">No posts available</li>
                 )}
             </ul>
         </section>

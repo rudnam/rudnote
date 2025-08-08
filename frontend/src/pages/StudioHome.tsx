@@ -25,18 +25,18 @@ export const StudioHome = () => {
             ) : error ? (
                 <p className="text-red-600 text-sm">{error}</p>
             ) : posts.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center">No posts yet.</p>
+                <p className="text-sm text-zinc-500 text-center">No posts yet.</p>
             ) : (
                 <ul className="space-y-2">
                     {posts.map((post: any) => (
                         <Link
                             key={post.id}
                             to={`/studio/${post.id}`}
-                            className="flex flex-col h-full p-4 border border-gray-300 rounded-lg hover:bg-gray-200 transition-colors space-y-2"
+                            className="flex flex-col h-full p-4 border border-zinc-300 rounded-lg hover:bg-zinc-200 transition-colors space-y-2"
                         >
                             <div>
                                 <h3 className="text-lg font-semibold font-serif">{post.title}</h3>
-                                <p className="text-sm text-gray-600">{post.summary}</p>
+                                <p className="text-sm text-zinc-600">{post.summary}</p>
                             </div>
                         </Link>
                     ))}

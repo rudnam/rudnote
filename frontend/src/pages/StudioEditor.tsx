@@ -3,13 +3,17 @@ import { useEffect, useState } from "react";
 import { usePostForm } from "../hooks/usePostForm";
 import { useUserPosts } from "../hooks/useUserPosts";
 import { useAuth } from "../context/AuthContext";
+import { MilkdownEditor } from "../components/MilkdownEditor";
+import { AutoResizeTextarea } from "../components/AutoResizeTextArea";
+import { readingTime } from "../lib/utils";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export const StudioEditor = () => {
     const { id } = useParams(); // "new" or postId
     const isNew = id === "new";
 
     const navigate = useNavigate();
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const { posts, fetchPosts } = useUserPosts(token);
     const {
         createPost,
@@ -28,7 +32,7 @@ export const StudioEditor = () => {
 
     useEffect(() => {
         if (!isNew) {
-            const post = posts.find((p: any) => p.id === id);
+            const post = posts.find((p) => p.id === id);
             if (post) {
                 setTitle(post.title);
                 setSlug(post.slug);
@@ -53,7 +57,7 @@ export const StudioEditor = () => {
         }
 
         fetchPosts();
-        navigate("/studio");
+        navigate(status === 'PUBLISHED' ? `/@${user?.username}/${slug}` : "/studio");
     };
 
     const handleDelete = async () => {
@@ -80,94 +84,115 @@ export const StudioEditor = () => {
         setSlug(newSlug);
     };
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <LoadingSpinner text="Loading editor..." />
+            </div>
+        );
+    }
+
+
     return (
-        <div className="flex-1 max-w-2xl mx-auto p-6 space-y-4">
-            <h2 className="text-lg font-semibold text-center">
-                {isNew ? "New Post" : "Edit Post"}
-            </h2>
+        <article className="flex-1 max-w-2xl w-full mx-auto p-6">
+            <AutoResizeTextarea
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Post title"
+                className="prose-h text-4xl border border-zinc-300 rounded-md p-2"
+            />
+            <AutoResizeTextarea
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+                placeholder="Short summary"
+                className="text-lg text-zinc-500 border border-zinc-300 rounded-md p-2"
+            />
 
-            {error && <p className="text-red-600 text-sm">{error}</p>}
-            {success && (
-                <p className="text-green-600 text-sm">Operation successful!</p>
-            )}
+            <div className="text-sm text-zinc-500 flex items-center not-prose mb-8 border-b border-zinc-200 pb-4">
+                <div className="flex items-center space-x-2 h-16">
+                    <img
+                        src={user?.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
+                        alt="User Avatar"
+                        className="h-10 w-10 rounded-full"
+                    />
+                    <div className="font-semibold text-zinc-800">{user?.displayName ?? "You"}</div>
+                </div>
+                ・{readingTime(content)}
+                ・<select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value as "DRAFT" | "PUBLISHED")}
+                    className="py-2 rounded text-sm border border-zinc-300 bg-white"
+                >
+                    <option value="DRAFT">Draft</option>
+                    <option value="PUBLISHED">Published</option>
+                </select>
+                <div className="ml-auto flex gap-2">
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                    placeholder="Post title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="px-3 py-2 border rounded text-sm w-full"
-                />
+                    <button
+                        type="submit"
+                        onClick={handleSubmit}
+                        disabled={loading}
+                        className="inline-block text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition"
+                    >
+                        {loading ? "Saving..." : isNew ? "Create Post" : "Update Post"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            navigate(status === 'PUBLISHED' ? `/@${user?.username}/${slug}` : "/studio")
+                        }
+                        className="text-sm text-zinc-500 hover:underline"
+                    >
+                        Cancel
+                    </button>
+                </div>
 
-                <div className="flex gap-2">
+
+            </div>
+
+
+            <section>
+                <div className="border border-zinc-300 rounded-md p-2 focus:ring-2 overflow-hidden">
+                    <MilkdownEditor
+                        value={content}
+                        onChange={setContent}
+                        postId={id ?? "new"}
+                    />
+                </div>
+            </section>
+
+            <section className="space-y-4 mt-10">
+                <h2 className="text-lg font-semibold text-zinc-700">Post Settings</h2>
+                <div className="flex gap-2 items-center flex-wrap">
                     <input
-                        placeholder="URL slug"
                         value={slug}
                         onChange={(e) => setSlug(e.target.value)}
-                        className="flex-1 px-3 py-2 border rounded text-sm"
+                        placeholder="URL slug"
+                        className="px-3 py-2 border rounded w-full sm:w-auto text-sm"
                     />
                     <button
                         type="button"
                         onClick={generateSlug}
-                        className="px-3 py-2 border text-sm rounded bg-gray-100 hover:bg-gray-200"
+                        className="px-3 py-2 text-sm border bg-zinc-100 hover:bg-zinc-200 rounded"
                     >
-                        Generate
+                        Generate Slug
                     </button>
-                </div>
-
-                <input
-                    placeholder="Summary"
-                    value={summary}
-                    onChange={(e) => setSummary(e.target.value)}
-                    className="px-3 py-2 border rounded text-sm w-full"
-                />
-
-                <textarea
-                    placeholder="Write your content..."
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    className="px-3 py-2 border rounded text-sm w-full h-32 resize-none"
-                />
-
-                <div className="flex flex-wrap gap-3 items-center">
-                    <select
-                        value={status}
-                        onChange={(e) =>
-                            setStatus(e.target.value as "DRAFT" | "PUBLISHED")
-                        }
-                        className="px-3 py-2 border rounded text-sm"
-                    >
-                        <option value="DRAFT">Draft</option>
-                        <option value="PUBLISHED">Published</option>
-                    </select>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="ml-auto px-4 py-2 bg-blue-600 text-white rounded text-sm disabled:opacity-50"
-                    >
-                        {loading ? "Saving..." : isNew ? "Create Post" : "Update Post"}
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate("/studio")}
-                        className="text-sm text-gray-500 hover:underline"
-                    >
-                        Cancel
-                    </button>
-
                     {!isNew && (
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="text-sm text-red-600 hover:underline"
+                            className="ml-auto text-sm text-red-600 hover:underline hover:bg-red-50 px-3 py-2 rounded"
                         >
-                            Delete
+                            Delete Post
                         </button>
                     )}
                 </div>
-            </form>
-        </div>
+
+
+            </section>
+
+            {error && <p className="text-red-600 text-sm">{error}</p>}
+            {success && <p className="text-green-600 text-sm">Saved successfully!</p>}
+        </article>
     );
 };

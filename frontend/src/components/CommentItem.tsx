@@ -26,7 +26,7 @@ export const CommentItem = ({
     const createdAtDate = new Date(comment.createdAt);
 
     return (
-        <div className="flex items-start  text-[0.8rem] space-x-4 border border-gray-300 rounded-lg p-4">
+        <div className="flex items-start  text-[0.8rem] space-x-4 border border-zinc-300 rounded-lg p-4">
             <Link to={`/@${comment.author?.username}`} className="mr-3">
                 <img
                     src={comment.author.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
@@ -40,7 +40,7 @@ export const CommentItem = ({
                             {comment.author.displayName || comment.author.username}
                         </Link>
                         <span
-                            className="text-[0.8rem] text-gray-500"
+                            className="text-[0.8rem] text-zinc-500"
                             title={formatExactTime(createdAtDate)}
                         >
                             ・{getRelativeTime(createdAtDate)}
@@ -65,7 +65,7 @@ export const CommentItem = ({
                         <textarea
                             value={editingContent}
                             onChange={(e) => setEditingContent(e.target.value)}
-                            className="w-full mt-2 p-2 border border-gray-300 rounded"
+                            className="w-full mt-2 p-2 border border-zinc-300 rounded"
                             rows={3}
                         />
                         <div className="flex gap-2 mt-2">
@@ -83,14 +83,14 @@ export const CommentItem = ({
                                     setEditingCommentId(null);
                                     setEditingContent("");
                                 }}
-                                className="px-3 py-1 text-sm bg-gray-300 text-black rounded"
+                                className="px-3 py-1 text-sm bg-zinc-300 text-black rounded"
                             >
                                 Cancel
                             </button>
                         </div>
                     </>
                 ) : (
-                    <p className="text-gray-800 text-sm">{comment.content}</p>
+                    <p className="text-zinc-800 text-sm">{comment.content}</p>
                 )}
 
             </div>
