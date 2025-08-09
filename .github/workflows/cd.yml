@@ -23,9 +23,9 @@ jobs:
           USER: ${{ secrets.EC2_USER }}
           DEPLOY_PATH: /home/ubuntu/deployments/rudnote
 
-          POSTGRES_DB: ${{ env.POSTGRES_DB }}
-          POSTGRES_USER: ${{ env.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: rudnote_db
+          POSTGRES_USER: rudnote_user
+          POSTGRES_PASSWORD: rudnote_pass
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
           R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
