@@ -31,15 +31,8 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Run unit tests with coverage
-        run: npm run test -- --coverage
-
-      - name: Upload unit test coverage report
-        if: success() && exists('frontend/coverage')
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-coverage
-          path: frontend/coverage/
+      - name: Run unit tests
+        run: npm run test
 
   test-e2e:
     name: Playwright E2E Tests
