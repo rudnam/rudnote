@@ -3,7 +3,6 @@ import {
     useRef,
     useState,
     type ReactNode,
-    type MouseEvent as ReactMouseEvent,
 } from "react";
 
 interface PopoutMenuProps {
@@ -41,7 +40,7 @@ export const PopoutMenu = ({
         };
     }, [closeOnClickOutside]);
 
-    const handleItemClick = (_e: ReactMouseEvent) => {
+    const handleItemClick = () => {
         if (closeOnClickItem) {
             setOpen(false);
         }

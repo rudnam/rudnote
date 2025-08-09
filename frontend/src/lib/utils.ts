@@ -1,6 +1,3 @@
-import type { Post } from "../types";
-
-
 
 export function readingTime(html: string) {
   const textOnly = html.replace(/<[^>]+>/g, "");

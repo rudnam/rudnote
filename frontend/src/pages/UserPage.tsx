@@ -16,19 +16,19 @@ export const UserPage = () => {
     const isSelf = userSlug === `@${authUser?.username}`;
     const username = isSelf ? authUser?.username : userSlug?.startsWith("@") ? userSlug.slice(1) : userSlug;
 
-    if (!username) {
-        return <div className="p-6 text-red-500">Invalid username</div>;
-    }
+    const [editing, setEditing] = useState(false);
 
     const {
         user: fetchedUser,
         loading: userLoading,
         error: userError
-    } = useUserByUsername(username);
+    } = useUserByUsername(username || "");
 
-    const { posts, loading: postsLoading, error: postsError, pageInfo, setPage } = usePublishedPosts(username);
+    const { posts, loading: postsLoading, error: postsError, pageInfo, setPage } = usePublishedPosts(username || "");
 
-    const [editing, setEditing] = useState(false);
+    if (!username) {
+        return <div className="p-6 text-red-500">Invalid username</div>;
+    }
 
     if (!isSelf && userLoading) {
         return <LoadingSpinner text="Loading user profile..." />;
