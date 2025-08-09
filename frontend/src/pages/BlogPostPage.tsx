@@ -40,10 +40,10 @@ export const BlogPostPage = () => {
     const isOwner = user?.username === post.author.username;
 
     return (
-        <article className="max-w-2xl w-full mx-auto p-6">
+        <article className="max-w-2xl w-full mx-auto p-4">
             <h1 className="text-4xl mb-2!">{post.title}</h1>
             <div className="text-lg text-zinc-500">{post.summary}</div>
-            <div className="text-sm text-zinc-500 flex items-center not-prose mb-8 border-b border-zinc-200 pb-4">
+            <div className="text-sm text-zinc-500 flex flex-wrap items-center not-prose mb-8 border-b border-zinc-200 pb-4">
                 <Link to={`/@${username}`} className="flex items-center space-x-2 h-16">
                     <img
                         src={post.author.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
@@ -60,14 +60,12 @@ export const BlogPostPage = () => {
                     {getRelativeTime(publishedAtDate)}
                 </span>}
                 {isOwner && (
-                    <div className="ml-auto">
-                        <Link
-                            to={`/studio/${post.id}`}
-                            className="inline-block text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition"
-                        >
-                            Edit Post
-                        </Link>
-                    </div>
+                    <Link
+                        to={`/studio/${post.id}`}
+                        className="md:ml-auto inline-block text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition"
+                    >
+                        Edit Post
+                    </Link>
                 )}
             </div>
 

@@ -19,26 +19,7 @@ export const Navbar = () => {
                 </Link>
                 <ProfileButton />
             </div>
-            <ul className="w-full text-center flex justify-center border-b border-zinc-200 font-semibold">
-                <Link
-                    to="/"
-                    className={`hover:bg-zinc-200 text-sm px-3 py-4`}
-                >
-                    <li>Home</li>
-                </Link>
-                <Link
-                    to="/about"
-                    className={`hover:bg-zinc-200 text-sm px-3 py-4`}
-                >
-                    <li>About</li>
-                </Link>
-                <Link
-                    to="/contact"
-                    className={`hover:bg-zinc-200 text-sm px-3 py-4`}
-                >
-                    <li>Contact</li>
-                </Link>
-            </ul>
+
         </nav >
     );
 }

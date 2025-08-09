@@ -9,7 +9,7 @@ import { readingTime } from "../lib/utils";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export const StudioEditor = () => {
-    const { id } = useParams(); // "new" or postId
+    const { id } = useParams();
     const isNew = id === "new";
 
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ export const StudioEditor = () => {
         createPost,
         updatePost,
         deletePost,
-        loading,
+        loading: postLoading,
         error,
         success,
     } = usePostForm(token);
@@ -29,9 +29,11 @@ export const StudioEditor = () => {
     const [summary, setSummary] = useState("");
     const [content, setContent] = useState("");
     const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("DRAFT");
+    const [editorLoading, setEditorLoading] = useState<boolean>(false);
 
     useEffect(() => {
         if (!isNew) {
+            setEditorLoading(true);
             const post = posts.find((p) => p.id === id);
             if (post) {
                 setTitle(post.title);
@@ -40,6 +42,7 @@ export const StudioEditor = () => {
                 setContent(post.content);
                 setStatus(post.status);
             }
+            setEditorLoading(false);
         }
     }, [id, posts]);
 
@@ -84,7 +87,7 @@ export const StudioEditor = () => {
         setSlug(newSlug);
     };
 
-    if (loading) {
+    if (editorLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
                 <LoadingSpinner text="Loading editor..." />
@@ -94,7 +97,7 @@ export const StudioEditor = () => {
 
 
     return (
-        <article className="flex-1 max-w-2xl w-full mx-auto p-6">
+        <article className="flex-1 max-w-2xl w-full mx-auto p-4">
             <AutoResizeTextarea
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -108,33 +111,34 @@ export const StudioEditor = () => {
                 className="text-lg text-zinc-500 border border-zinc-300 rounded-md p-2"
             />
 
-            <div className="text-sm text-zinc-500 flex items-center not-prose mb-8 border-b border-zinc-200 pb-4">
-                <div className="flex items-center space-x-2 h-16">
-                    <img
-                        src={user?.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
-                        alt="User Avatar"
-                        className="h-10 w-10 rounded-full object-cover"
-                    />
-                    <div className="font-semibold text-zinc-800">{user?.displayName ?? "You"}</div>
+            <div className="text-sm text-zinc-500 flex flex-wrap items-center not-prose mb-8 border-b border-zinc-200 pb-4 gap-2">
+                <div className="flex items-center">
+                    <div className="flex items-center space-x-2 h-16">
+                        <img
+                            src={user?.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
+                            alt="User Avatar"
+                            className="h-10 w-10 rounded-full object-cover"
+                        />
+                        <div className="font-semibold text-zinc-800">{user?.displayName ?? "You"}</div>
+                    </div>
+                    ・{readingTime(content)}
+                    ・<select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value as "DRAFT" | "PUBLISHED")}
+                        className="py-2 rounded text-sm border border-zinc-300 bg-white"
+                    >
+                        <option value="DRAFT">Draft</option>
+                        <option value="PUBLISHED">Published</option>
+                    </select>
                 </div>
-                ・{readingTime(content)}
-                ・<select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value as "DRAFT" | "PUBLISHED")}
-                    className="py-2 rounded text-sm border border-zinc-300 bg-white"
-                >
-                    <option value="DRAFT">Draft</option>
-                    <option value="PUBLISHED">Published</option>
-                </select>
-                <div className="ml-auto flex gap-2">
-
+                <div className="md:ml-auto flex gap-2">
                     <button
                         type="submit"
                         onClick={handleSubmit}
-                        disabled={loading}
+                        disabled={postLoading}
                         className="inline-block text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition"
                     >
-                        {loading ? "Saving..." : isNew ? "Create Post" : "Update Post"}
+                        {postLoading ? "Saving..." : isNew ? "Create Post" : "Update Post"}
                     </button>
                     <button
                         type="button"

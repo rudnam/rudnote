@@ -8,7 +8,7 @@ export const PostItem = ({ post }: { post: Post }) => {
     return (
         <Link
             to={`/@${post.author.username}/${post.slug}`}
-            className="flex flex-col gap-2 p-4 border-zinc-300 hover:bg-zinc-100 transition-colors [&:not(:last-child)]:border-b h-[180px]"
+            className="flex flex-col gap-2 p-4 border-zinc-300 hover:bg-zinc-100 transition-colors h-[180px]"
         >
             <div className="flex items-center gap-1 text-xs text-zinc-600">
                 <img
@@ -34,7 +34,7 @@ export const PostItem = ({ post }: { post: Post }) => {
                 <img
                     src={"https://images.unsplash.com/photo-1554629947-334ff61d85dc"}
                     alt="Blog image"
-                    className="max-h-16 md:max-h-24 max-w-20 md:max-w-32 w-full rounded-lg object-cover"
+                    className="max-h-16 md:max-h-20 max-w-20 md:max-w-28 w-full rounded-lg object-cover"
                 />
             </div>
 

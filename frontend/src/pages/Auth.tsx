@@ -32,7 +32,6 @@ export const Auth = () => {
                         {isRegistering ? "Register" : "Log In"}
                     </h2>
 
-                    {/* Toggle Login/Register */}
                     <div className="flex justify-center items-center gap-2">
                         <span className="text-sm">Login</span>
                         <label className="relative inline-flex items-center cursor-pointer">
