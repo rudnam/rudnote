@@ -1,15 +1,20 @@
 package com.rudnam.note.controller;
 
+import com.rudnam.note.dto.PostRequest;
+import com.rudnam.note.dto.PostResponse;
+import com.rudnam.note.dto.UserPublicDto;
 import com.rudnam.note.models.Post;
 import com.rudnam.note.models.User;
 import com.rudnam.note.repository.PostRepository;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,26 +29,51 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> getAllPublishedPosts() {
-        return postRepository.findAllByStatus(Post.Status.PUBLISHED);
+    public Page<PostResponse> getAllPublishedPosts(Pageable pageable) {
+        return postRepository.findAllByStatus(Post.Status.PUBLISHED, pageable)
+                .map(this::toPostResponse);
     }
 
     @GetMapping("/@{username}")
-    public ResponseEntity<List<Post>> getPublishedPostsByUser(@PathVariable String username) {
-        List<Post> posts = postRepository.findAllByAuthor_UsernameAndStatus(username, Post.Status.PUBLISHED);
-        return ResponseEntity.ok(posts);
+    public Page<PostResponse> getPublishedPostsByUser(@PathVariable String username, Pageable pageable) {
+        return postRepository.findAllByAuthor_UsernameAndStatus(username, Post.Status.PUBLISHED, pageable)
+                .map(this::toPostResponse);
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getMyPosts(@AuthenticationPrincipal User currentUser) {
-        if (currentUser == null) {
+    @PostMapping
+    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest dto, @AuthenticationPrincipal User user) {
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
         }
 
-        List<Post> posts = postRepository.findAllByAuthor(currentUser);
-        return ResponseEntity.ok(posts);
+        Post newPost = new Post();
+        newPost.setTitle(dto.title());
+        newPost.setSummary(dto.summary());
+        newPost.setContent(dto.content());
+        newPost.setSlug(dto.slug());
+        newPost.setAuthor(user);
+        if ("PUBLISHED".equalsIgnoreCase(dto.status())) {
+            newPost.setStatus(Post.Status.PUBLISHED);
+            newPost.setPublishedAt(Instant.now());
+        } else {
+            newPost.setStatus(Post.Status.DRAFT);
+        }
+        newPost.setCreatedAt(Instant.now());
+        newPost.setUpdatedAt(Instant.now());
+
+        Post saved = postRepository.save(newPost);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toPostResponse(saved));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyPosts(@AuthenticationPrincipal User currentUser, Pageable pageable) {
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
+        }
+        Page<PostResponse> myPosts = postRepository.findAllByAuthor(currentUser, pageable)
+                .map(this::toPostResponse);
+        return ResponseEntity.ok(myPosts);
+    }
 
     @GetMapping("/@{username}/{slug}")
     public ResponseEntity<?> getPostByUsernameAndSlug(
@@ -65,38 +95,18 @@ public class PostController {
             }
         }
 
-        return ResponseEntity.ok(post);
-    }
-
-    @PostMapping
-    public ResponseEntity<?> createPost(@RequestBody Post newPost, @AuthenticationPrincipal User user) {
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
-        }
-
-        newPost.setTitle(newPost.getTitle());
-        newPost.setSummary(newPost.getSummary());
-        newPost.setContent(newPost.getContent());
-        newPost.setSlug(newPost.getSlug());
-        newPost.setAuthor(user);
-        if (newPost.getStatus() == Post.Status.PUBLISHED) {
-            newPost.setStatus(Post.Status.PUBLISHED);
-            newPost.setPublishedAt(Instant.now());
-        } else {
-            newPost.setStatus(Post.Status.DRAFT);
-        }
-        newPost.setCreatedAt(Instant.now());
-        newPost.setUpdatedAt(Instant.now());
-
-        Post saved = postRepository.save(newPost);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        return ResponseEntity.ok(toPostResponse(post));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePost(
             @PathVariable UUID id,
-            @RequestBody Post updatedPost,
+            @Valid @RequestBody PostRequest dto,
             @AuthenticationPrincipal User currentUser) {
+
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
+        }
 
         Optional<Post> optionalPost = postRepository.findById(id);
         if (optionalPost.isEmpty()) {
@@ -109,25 +119,30 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not the author of this post.");
         }
 
-        post.setTitle(updatedPost.getTitle());
-        post.setSlug(updatedPost.getSlug());
-        post.setSummary(updatedPost.getSummary());
-        post.setContent(updatedPost.getContent());
-        if (updatedPost.getStatus() == Post.Status.PUBLISHED) {
+        post.setTitle(dto.title());
+        post.setSlug(dto.slug());
+        post.setSummary(dto.summary());
+        post.setContent(dto.content());
+        if ("PUBLISHED".equalsIgnoreCase(dto.status())) {
             post.setStatus(Post.Status.PUBLISHED);
             post.setPublishedAt(Instant.now());
         } else {
             post.setStatus(Post.Status.DRAFT);
         }
-        postRepository.save(post);
+        post.setUpdatedAt(Instant.now());
 
-        return ResponseEntity.ok(post);
+        Post saved = postRepository.save(post);
+        return ResponseEntity.ok(toPostResponse(saved));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(
             @PathVariable UUID id,
             @AuthenticationPrincipal User currentUser) {
+
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid token");
+        }
 
         Optional<Post> optionalPost = postRepository.findById(id);
         if (optionalPost.isEmpty()) {
@@ -145,5 +160,28 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    private PostResponse toPostResponse(Post post) {
+        UserPublicDto authorDto = new UserPublicDto(
+                post.getAuthor().getUsername(),
+                post.getAuthor().getDisplayName(),
+                post.getAuthor().getBio(),
+                post.getAuthor().getAvatarUrl(),
+                post.getAuthor().getWebsiteUrl(),
+                post.getAuthor().getLocation(),
+                post.getAuthor().getCreatedAt()
+        );
 
+        return new PostResponse(
+                post.getId().toString(),
+                post.getTitle(),
+                post.getSlug(),
+                post.getSummary(),
+                post.getContent(),
+                post.getStatus().name(),
+                post.getCreatedAt(),
+                post.getUpdatedAt(),
+                post.getPublishedAt(),
+                authorDto
+        );
+    }
 }

@@ -26,7 +26,7 @@ export const UserPage = () => {
         error: userError
     } = useUserByUsername(username);
 
-    const { posts, loading: postsLoading, error: postsError } = usePublishedPosts(username);
+    const { posts, loading: postsLoading, error: postsError, pageInfo, setPage } = usePublishedPosts(username);
 
     const [editing, setEditing] = useState(false);
 
@@ -56,7 +56,33 @@ export const UserPage = () => {
                 <p className="text-zinc-700 mb-4">{displayUser.bio || "No bio"}</p>
             </section>
 
-            <UserPosts posts={posts} loading={postsLoading} error={postsError} />
+            <UserPosts
+                posts={posts}
+                loading={postsLoading}
+                error={postsError}
+            />
+
+            {!postsLoading && !postsError && pageInfo.totalPages > 1 && (
+                <div className="flex justify-center items-center space-x-4 mt-6 text-sm">
+                    <button
+                        disabled={pageInfo.first}
+                        onClick={() => setPage(pageInfo.number - 1)}
+                    >
+                        Previous
+                    </button>
+
+                    <span>
+                        Page {pageInfo.number + 1} of {pageInfo.totalPages}
+                    </span>
+
+                    <button
+                        disabled={pageInfo.last}
+                        onClick={() => setPage(pageInfo.number + 1)}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

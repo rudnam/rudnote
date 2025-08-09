@@ -74,7 +74,6 @@ export const CommentItem = ({
                                     handleCommentEdit(comment.id, editingContent);
                                     setEditingCommentId(null);
                                 }}
-                                className="px-3 py-1 text-sm bg-blue-500 text-white rounded"
                             >
                                 Save
                             </button>
@@ -83,7 +82,6 @@ export const CommentItem = ({
                                     setEditingCommentId(null);
                                     setEditingContent("");
                                 }}
-                                className="px-3 py-1 text-sm bg-zinc-300 text-black rounded"
                             >
                                 Cancel
                             </button>

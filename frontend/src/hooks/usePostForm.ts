@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { PostData } from "../types";
+import type { PostPayload } from "../types";
 import { API_URL } from "../consts";
 
 export const usePostForm = (token: string) => {
@@ -7,7 +7,7 @@ export const usePostForm = (token: string) => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 
-    const createPost = async (data: PostData) => {
+    const createPost = async (data: PostPayload) => {
         setLoading(true);
         setError(null);
         setSuccess(false);
@@ -28,7 +28,7 @@ export const usePostForm = (token: string) => {
         }
     };
 
-    const updatePost = async (id: string, data: PostData) => {
+    const updatePost = async (id: string, data: PostPayload) => {
         setLoading(true);
         setError(null);
         setSuccess(false);

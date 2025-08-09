@@ -7,6 +7,37 @@
     @apply cursor-pointer;
   }
 
+  button:not(:where([class~="not-btn"],[class~="not-btn"] *)) {
+    @apply block px-4 py-2 rounded-lg font-medium tracking-wide
+          text-gray-900 bg-white border border-gray-200
+          shadow-sm hover:shadow-md transform transition-transform
+          hover:-translate-y-1 active:translate-y-0
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-300;
+  }
+
+  input:not(:where([class~="not-input"],[class~="not-input"] *)),
+  textarea:not(:where([class~="not-input"],[class~="not-input"] *)),
+  select:not(:where([class~="not-input"],[class~="not-input"] *)) {
+    @apply block px-4 py-2 rounded-lg
+          text-gray-900 bg-white border border-gray-200
+          shadow-sm
+          placeholder:text-gray-400
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-300
+          transition-shadow duration-200
+          hover:shadow-md;
+  }
+
+  /* select の矢印の余白調整（必要に応じて） */
+  select:not(:where([class~="not-input"],[class~="not-input"] *)) {
+    @apply appearance-none pr-8 bg-white;
+    background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%23999' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25em 1.25em;
+  }
+
+
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
   }
@@ -15,6 +46,25 @@
     overflow-clip-margin: unset;
   }
 }
+
+.btn {
+  @apply block px-4 py-2 rounded-lg font-medium tracking-wide
+         text-gray-900 bg-white border border-gray-200
+         shadow-sm hover:shadow-md transform transition-transform
+         hover:-translate-y-1 active:translate-y-0
+         focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-300;
+}
+
+.input {
+  @apply block w-full px-4 py-2 rounded-lg
+         text-gray-900 bg-white border border-gray-200
+         shadow-sm
+         placeholder:text-gray-400
+         focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-300
+         transition-shadow duration-200
+         hover:shadow-md;
+}
+
 
 @theme {
   --font-sans: "Inter", "Noto Sans JP", "sans-serif";
@@ -30,10 +80,6 @@
             }
         }
     }
-}
-
-.text-faint {
-  @apply text-zinc-500;
 }
 
 :root {

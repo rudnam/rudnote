@@ -1,4 +1,3 @@
-import { LoadingSpinner } from "../components/LoadingSpinner";
 import { useAuthForm } from "../hooks/useAuthForm";
 
 export const Auth = () => {
@@ -32,19 +31,33 @@ export const Auth = () => {
                         {isRegistering ? "Register" : "Log In"}
                     </h2>
 
-                    <div className="flex justify-center items-center gap-2">
-                        <span className="text-sm">Login</span>
-                        <label className="relative inline-flex items-center cursor-pointer">
+                    <div className="flex items-center justify-center gap-3">
+                        <span className="text-sm text-gray-700">Login</span>
+                        <label className="relative inline-block w-12 h-7 cursor-pointer select-none">
                             <input
                                 type="checkbox"
-                                className="sr-only peer"
+                                className="peer sr-only"
                                 checked={isRegistering}
                                 onChange={() => setIsRegistering(!isRegistering)}
                             />
-                            <div className="w-11 h-6 bg-zinc-200 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:left-[4px] after:top-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:tranzinc-x-full" />
+                            <span
+                                className="
+                                    block w-full h-full rounded-full
+                                    bg-gray-300 peer-checked:bg-zinc-800
+                                    transition-colors duration-300
+                                "
+                            />
+                            <span
+                                className="
+                                    absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full
+                                    shadow-md peer-checked:translate-x-5
+                                    transition-transform duration-300
+                                "
+                            />
                         </label>
-                        <span className="text-sm">Register</span>
+                        <span className="text-sm text-gray-700">Register</span>
                     </div>
+
 
                     {error && (
                         <div className="text-red-600 text-sm text-center">{error}</div>
@@ -78,11 +91,11 @@ export const Auth = () => {
 
                     <button
                         type="submit"
-                        className="w-full py-2 bg-blue-600 text-white rounded text-sm disabled:opacity-50"
+                        className="w-full text-sm"
                         disabled={loading}
                     >
                         {loading
-                            ? <LoadingSpinner text="Processing..." />
+                            ? "Processing..."
                             : isRegistering
                                 ? "Register"
                                 : "Log In"}
@@ -93,7 +106,7 @@ export const Auth = () => {
                     <p className="text-green-600">Logged in!</p>
                     <button
                         onClick={logout}
-                        className="mt-4 py-2 px-4 bg-red-500 text-white rounded text-sm"
+                        className="mt-4 bg-red-500 text-sm"
                     >
                         Log Out
                     </button>

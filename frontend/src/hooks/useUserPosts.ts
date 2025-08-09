@@ -15,7 +15,7 @@ export function useUserPosts(token: string | null) {
         }
         try {
             const result = await getMyPosts(token);
-            setPosts(result);
+            setPosts(result.content);
         } catch (err: any) {
             setError(err.message || "Failed to load posts");
         } finally {

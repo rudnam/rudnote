@@ -18,10 +18,10 @@ export const CommentMenu = ({
         <div>
             {!isEditing ? (
                 <>
-                    <button onClick={onEdit} className="w-full text-left px-4 py-2 hover:bg-zinc-100">
+                    <button onClick={onEdit} className="not-btn w-full text-left px-4 py-2 hover:bg-zinc-100">
                         Edit
                     </button>
-                    <button onClick={onDelete} className="w-full text-left px-4 py-2 text-red-600 hover:bg-zinc-100">
+                    <button onClick={onDelete} className="not-btn w-full text-left px-4 py-2 text-red-600 hover:bg-zinc-100">
                         Delete
                     </button>
                 </>

@@ -1,3 +1,31 @@
+export interface PageInfo {
+  number: number;
+  totalPages: number;
+  size: number;
+  totalElements: number;
+  first: boolean;
+  last: boolean;
+}
+
+export interface Page<T> {
+  content: T[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  first: boolean;
+  size: number;
+  number: number;
+  numberOfElements: number;
+  empty: boolean;
+}
+
 export type Note = {
   id: string;
   title: string;
@@ -26,13 +54,7 @@ export type Post = {
   author: UserPublic;
 };
 
-export type PostData = {
-  title: string;
-  slug: string;
-  summary: string;
-  content: string;
-  status: "DRAFT" | "PUBLISHED";
-};
+export type PostPayload = Omit<Post, "id" | "createdAt" | "updatedAt" | "publishedAt" | "author">;
 
 export type UserMe = {
   id: string;

@@ -42,11 +42,11 @@ export const UserHeader = ({
                 <div className="flex space-x-2">
                     <button
                         onClick={onEdit}
-                        className="text-[0.8rem] mt-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        className="text-[0.8rem] mt-2"
                     >
                         Edit Profile
                     </button>
-                    <Link to={`/studio`} className="text-[0.8rem] mt-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600" >
+                    <Link to={`/studio`} className="btn text-[0.8rem] mt-2" >
                         Manage Posts
                     </Link>
                 </div>

@@ -15,14 +15,14 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
     private static final String SECRET = "rudnamrudnamrudnamrudnamrudnamrudnamrudnamrudnamrudnamrudnamrudnamrudnam";
-
+    private static final int expirationSeconds = 60 * 60;
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
     public String generateToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getId().toString())
                 .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plusSeconds(60 * 60)))
+                .setExpiration(Date.from(Instant.now().plusSeconds(expirationSeconds)))
                 .signWith(key)
                 .compact();
     }
@@ -36,5 +36,10 @@ public class JwtService {
 
         return UUID.fromString(claims.getSubject());
     }
+
+    public int getExpirationSeconds() {
+        return expirationSeconds;
+    }
+
 
 }

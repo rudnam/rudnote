@@ -54,17 +54,17 @@ export const ProfileButton = () => {
 
                     <button
                         onClick={handleLogout}
-                        className="block w-full px-4 py-2 text-left hover:bg-zinc-100"
+                        className="not-btn block w-full px-4 py-2 text-left hover:bg-zinc-100"
                     >
                         Log out
                     </button>
                 </>
             ) : (
                 <div className="flex flex-col text-center p-4 border-b border-zinc-200">
-                    <div className="text-md mb-2">Get started by logging inp.</div>
+                    <div className="text-md mb-2">Get started by logging in.</div>
                     <Link
                         to="/login"
-                        className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                        className="btn w-full"
                     >
                         Log in
                     </Link>

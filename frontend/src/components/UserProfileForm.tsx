@@ -78,21 +78,18 @@ export const UserProfileForm = ({
                 </div>
             ))}
 
-            <div className="flex justify-end gap-4 pt-2">
+            <div className="flex justify-end gap-2 pt-2 text-sm">
                 <button
                     type="button"
                     onClick={onClose}
-                    className="px-4 py-2 text-zinc-700 hover:text-black underline"
+                    className="not-btn px-4 py-2 text-zinc-700 hover:text-black hover:underline"
                 >
                     Cancel
                 </button>
                 <button
                     type="submit"
                     disabled={saving}
-                    className={`px-4 py-2 rounded-md text-white ${saving
-                        ? "bg-blue-300 cursor-not-allowed"
-                        : "bg-blue-500 hover:bg-blue-600"
-                        }`}
+                    className={`px-4`}
                 >
                     {saving ? "Saving..." : "Save"}
                 </button>

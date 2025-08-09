@@ -131,12 +131,11 @@ export const StudioEditor = () => {
                         <option value="PUBLISHED">Published</option>
                     </select>
                 </div>
-                <div className="md:ml-auto flex gap-2">
+                <div className="md:ml-auto flex gap-4">
                     <button
                         type="submit"
                         onClick={handleSubmit}
                         disabled={postLoading}
-                        className="inline-block text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition"
                     >
                         {postLoading ? "Saving..." : isNew ? "Create Post" : "Update Post"}
                     </button>
@@ -145,7 +144,7 @@ export const StudioEditor = () => {
                         onClick={() =>
                             navigate(status === 'PUBLISHED' ? `/@${user?.username}/${slug}` : "/studio")
                         }
-                        className="text-sm text-zinc-500 hover:underline"
+                        className="not-btn text-zinc-500 hover:underline"
                     >
                         Cancel
                     </button>
@@ -167,7 +166,7 @@ export const StudioEditor = () => {
 
             <section className="space-y-4 mt-10">
                 <h2 className="text-lg font-semibold text-zinc-700">Post Settings</h2>
-                <div className="flex gap-2 items-center flex-wrap">
+                <div className="flex gap-2 items-center flex-wrap text-sm">
                     <input
                         value={slug}
                         onChange={(e) => setSlug(e.target.value)}
@@ -177,7 +176,6 @@ export const StudioEditor = () => {
                     <button
                         type="button"
                         onClick={generateSlug}
-                        className="px-3 py-2 text-sm border bg-zinc-100 hover:bg-zinc-200 rounded"
                     >
                         Generate Slug
                     </button>
@@ -185,7 +183,7 @@ export const StudioEditor = () => {
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="ml-auto text-sm text-red-600 hover:underline hover:bg-red-50 px-3 py-2 rounded"
+                            className="not-btn ml-auto text-sm text-red-600 hover:underline hover:bg-red-50 px-3 py-2 rounded"
                         >
                             Delete Post
                         </button>

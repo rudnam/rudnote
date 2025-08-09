@@ -2,26 +2,50 @@ import { useEffect, useState } from "react";
 import { getPublishedPostsByUsername } from "../services/postService";
 import type { Post } from "../types";
 
-export function usePublishedPosts(username: string) {
+interface PageInfo {
+    number: number;
+    totalPages: number;
+    size: number;
+    totalElements: number;
+    first: boolean;
+    last: boolean;
+}
+
+export function usePublishedPosts(username: string, initialPage = 0, pageSize = 6) {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchPosts = async () => {
-        setLoading(true);
-        try {
-            const result = await getPublishedPostsByUsername(username);
-            setPosts(result);
-        } catch (err: any) {
-            setError(err.message || "Failed to load posts");
-        } finally {
-            setLoading(false);
-        }
-    };
+    const [pageInfo, setPageInfo] = useState<PageInfo>({
+        number: 0,
+        totalPages: 0,
+        size: pageSize,
+        totalElements: 0,
+        first: true,
+        last: false,
+    });
+
+    const [page, setPage] = useState(initialPage);
 
     useEffect(() => {
-        fetchPosts();
-    }, [username]);
+        setLoading(true);
+        setError(null);
 
-    return { fetchPosts, posts, loading, error };
+        getPublishedPostsByUsername(username, page, pageSize)
+            .then((pagedResponse) => {
+                setPosts(pagedResponse.content);
+                setPageInfo({
+                    number: pagedResponse.number,
+                    totalPages: pagedResponse.totalPages,
+                    size: pagedResponse.size,
+                    totalElements: pagedResponse.totalElements,
+                    first: pagedResponse.first,
+                    last: pagedResponse.last,
+                });
+            })
+            .catch((err) => setError(err.message || "Failed to load posts."))
+            .finally(() => setLoading(false));
+    }, [username, page, pageSize]);
+
+    return { posts, loading, error, pageInfo, setPage };
 }

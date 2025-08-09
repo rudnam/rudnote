@@ -66,7 +66,8 @@ public class UserController {
         }
 
         String token = jwtService.generateToken(user);
-        return ResponseEntity.ok(new TokenResponse(token));
+        long expiresIn = jwtService.getExpirationSeconds();
+        return ResponseEntity.ok(new TokenResponse(token, "Bearer", expiresIn));
     }
 
     @GetMapping("/me")
@@ -168,7 +169,7 @@ public class UserController {
         return ResponseEntity.ok(profile);
     }
 
-    public record TokenResponse(String token) {}
+    public record TokenResponse(String token, String tokenType, long expiresInSeconds) {}
     public record RegisterRequest(String username, String email, String password) {}
     public record LoginRequest(String email, String password) {}
     public record UpdateProfileRequest(

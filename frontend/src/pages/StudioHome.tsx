@@ -13,8 +13,8 @@ export const StudioHome = () => {
             <div className="flex justify-between items-center">
                 <h2 className="text-lg font-semibold">Your Posts</h2>
                 <button
+                    className="text-sm"
                     onClick={() => navigate("/studio/new")}
-                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded"
                 >
                     + New Post
                 </button>

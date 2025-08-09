@@ -62,7 +62,7 @@ export const BlogPostPage = () => {
                 {isOwner && (
                     <Link
                         to={`/studio/${post.id}`}
-                        className="md:ml-auto inline-block text-sm text-white bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 transition"
+                        className="btn md:ml-auto"
                     >
                         Edit Post
                     </Link>
@@ -88,7 +88,7 @@ export const BlogPostPage = () => {
                         <button
                             onClick={handleCommentSubmit}
                             disabled={commentLoading}
-                            className="px-4 py-2 bg-blue-600 text-[0.8rem] text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                            className="text-sm"
                         >
                             {commentLoading ? <LoadingSpinner text="Loading..." /> : "Post Comment"}
                         </button>

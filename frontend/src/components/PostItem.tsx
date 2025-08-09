@@ -8,7 +8,7 @@ export const PostItem = ({ post }: { post: Post }) => {
     return (
         <Link
             to={`/@${post.author.username}/${post.slug}`}
-            className="flex flex-col gap-2 p-4 border-zinc-300 hover:bg-zinc-100 transition-colors h-[180px]"
+            className="flex flex-col gap-2 p-4 border-zinc-200 hover:bg-zinc-200/40 transition-colors h-[200px] md:border [&:not(:last-child)]:border-b md:rounded-lg"
         >
             <div className="flex items-center gap-1 text-xs text-zinc-600">
                 <img

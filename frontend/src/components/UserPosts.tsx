@@ -17,13 +17,13 @@ export const UserPosts = ({
     return (
         <section>
             <h2 className="text-2xl font-semibold mt-6 mb-2">Posts</h2>
-            <ul className="-mx-4">
+            <div className="-mx-2 grid md:gap-4">
                 {posts.length > 0 ? (
                     posts.map((post) => <PostItem key={post.id} post={post} />)
                 ) : (
-                    <li className="text-zinc-600">No posts available</li>
+                    <div className="text-zinc-600">No posts available</div>
                 )}
-            </ul>
+            </div>
         </section>
     );
 };

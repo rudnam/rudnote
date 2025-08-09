@@ -49,7 +49,7 @@ export const PopoutMenu = ({
 
     return (
         <div ref={ref} className="relative text-sm">
-            <button onClick={() => setOpen((prev) => !prev)}>
+            <button className="not-btn" onClick={() => setOpen((prev) => !prev)}>
                 {trigger}
             </button>
 
