@@ -137,13 +137,6 @@ jobs:
       - name: Run tests with Maven
         run: ./mvnw clean verify -DskipTests=false -Dmaven.test.failure.ignore=false
 
-      - name: Upload Surefire test reports
-        if: success() && exists('backend/target/surefire-reports')
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-surefire-reports
-          path: backend/target/surefire-reports/
-
   docker-push:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
