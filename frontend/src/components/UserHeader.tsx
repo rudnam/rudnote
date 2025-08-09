@@ -15,7 +15,7 @@ export const UserHeader = ({
         <img
             src={user.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
             alt="User Avatar"
-            className="h-24 w-24 rounded-full"
+            className="h-24 w-24 rounded-full object-cover"
         />
         <div className="flex flex-col">
             <h1 className="text-3xl font-bold font-sans">{user.displayName || user.username}</h1>

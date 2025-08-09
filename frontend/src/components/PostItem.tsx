@@ -14,7 +14,7 @@ export const PostItem = ({ post }: { post: Post }) => {
                 <img
                     src={post.author.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
                     alt="User Avatar"
-                    className="h-6 w-6 rounded-full"
+                    className="h-6 w-6 rounded-full object-cover"
                 />
                 <div>
                     {post.author.displayName}

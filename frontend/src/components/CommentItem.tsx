@@ -30,7 +30,7 @@ export const CommentItem = ({
             <Link to={`/@${comment.author?.username}`} className="mr-3">
                 <img
                     src={comment.author.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
-                    className="w-10 h-10 rounded-full"
+                    className="w-10 h-10 rounded-full object-cover"
                 />
             </Link>
             <div className="flex-1 text-sm">

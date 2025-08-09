@@ -16,7 +16,7 @@ export const ProfileButton = () => {
         <img
             src={user?.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
             alt="User Avatar"
-            className="h-8 w-8 rounded-full bg-zinc-200 mr-2"
+            className="h-8 w-8 rounded-full bg-zinc-200 mr-2 object-cover"
         />
     ) : (
         <User className="h-8 w-8 bg-zinc-200 hover:bg-zinc-300 rounded-full mr-2" />
@@ -30,7 +30,7 @@ export const ProfileButton = () => {
                         <img
                             src={user?.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
                             alt="User Avatar"
-                            className="h-12 w-12 bg-zinc-200 rounded-full"
+                            className="h-12 w-12 bg-zinc-200 rounded-full object-cover"
                         />
                         <div className="text-left">
                             <div className="font-semibold">{user?.displayName || user?.username}</div>

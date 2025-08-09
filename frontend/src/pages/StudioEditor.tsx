@@ -113,7 +113,7 @@ export const StudioEditor = () => {
                     <img
                         src={user?.avatarUrl || "https://avatars.githubusercontent.com/u/70255485?v=4"}
                         alt="User Avatar"
-                        className="h-10 w-10 rounded-full"
+                        className="h-10 w-10 rounded-full object-cover"
                     />
                     <div className="font-semibold text-zinc-800">{user?.displayName ?? "You"}</div>
                 </div>
