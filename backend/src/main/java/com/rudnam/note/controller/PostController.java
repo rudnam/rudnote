@@ -3,10 +3,13 @@ package com.rudnam.note.controller;
 import com.rudnam.note.dto.PostRequest;
 import com.rudnam.note.dto.PostResponse;
 import com.rudnam.note.dto.UserPublicDto;
+import com.rudnam.note.models.Image;
 import com.rudnam.note.models.Post;
 import com.rudnam.note.models.User;
+import com.rudnam.note.repository.ImageRepository;
 import com.rudnam.note.repository.PostRepository;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,9 +27,17 @@ import java.util.UUID;
 public class PostController {
 
     private final PostRepository postRepository;
+    private final ImageRepository imageRepository;
 
-    public PostController(PostRepository postRepository) {
+    @Value("${r2.bucket}")
+    private String r2Bucket;
+
+    @Value("${r2.endpoint}")
+    private String r2Endpoint;
+
+    public PostController(PostRepository postRepository, ImageRepository imageRepository) {
         this.postRepository = postRepository;
+        this.imageRepository = imageRepository;
     }
 
     @GetMapping
@@ -62,6 +74,18 @@ public class PostController {
         newPost.setUpdatedAt(Instant.now());
 
         Post saved = postRepository.save(newPost);
+
+        if (dto.imageKeys() != null && !dto.imageKeys().isEmpty()) {
+            for (String key : dto.imageKeys()) {
+                Image img = new Image();
+                img.setKey(key);
+                img.setUrl(String.format("%s/%s/%s", r2Endpoint, r2Bucket, key));
+                img.setPost(saved);
+                img.setCreatedAt(Instant.now());
+                imageRepository.save(img);
+            }
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(toPostResponse(saved));
     }
 
@@ -132,6 +156,18 @@ public class PostController {
         post.setUpdatedAt(Instant.now());
 
         Post saved = postRepository.save(post);
+
+        if (dto.imageKeys() != null && !dto.imageKeys().isEmpty()) {
+            for (String key : dto.imageKeys()) {
+                Image img = new Image();
+                img.setKey(key);
+                img.setUrl(String.format("%s/%s/%s", r2Endpoint, r2Bucket, key));
+                img.setPost(saved);
+                img.setCreatedAt(Instant.now());
+                imageRepository.save(img);
+            }
+        }
+
         return ResponseEntity.ok(toPostResponse(saved));
     }
 
@@ -171,6 +207,9 @@ public class PostController {
                 post.getAuthor().getCreatedAt()
         );
 
+        List<Image> images = imageRepository.findAllByPost(post);
+        List<String> imageUrls = images.stream().map(Image::getUrl).toList();
+
         return new PostResponse(
                 post.getId().toString(),
                 post.getTitle(),
@@ -181,7 +220,8 @@ public class PostController {
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
                 post.getPublishedAt(),
-                authorDto
+                authorDto,
+                imageUrls
         );
     }
 }

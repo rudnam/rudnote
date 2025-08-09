@@ -99,22 +99,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "21"
 
-
       - name: Set up db
         run: docker compose up -d db
-
 
       - name: Wait for db to be ready
         run: |
           for i in {1..10}; do
-            if docker exec $(docker ps -qf "name=db") pg_isready -U rudnote_user -d rudnote_db; then
+            if docker exec $(docker ps -qf "name=db") pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}; then
               echo "Database is ready"
               exit 0
             fi

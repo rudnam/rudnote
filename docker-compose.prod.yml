@@ -4,9 +4,13 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/rudnote_db
-      SPRING_DATASOURCE_USERNAME: rudnote_user
-      SPRING_DATASOURCE_PASSWORD: rudnote_pass
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      R2_SECRET_KEY: ${R2_SECRET_KEY}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
+      R2_BUCKET: ${R2_BUCKET}
     depends_on:
       - db
     networks:
@@ -16,15 +20,17 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: rudnote_db
-      POSTGRES_USER: rudnote_user
-      POSTGRES_PASSWORD: rudnote_pass
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
       - app
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U rudnote_user -d rudnote_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5

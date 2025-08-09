@@ -1,6 +1,7 @@
 package com.rudnam.note.dto;
 
 import java.time.Instant;
+import java.util.List;
 
 public record PostResponse(
         String id,
@@ -12,5 +13,6 @@ public record PostResponse(
         Instant createdAt,
         Instant updatedAt,
         Instant publishedAt,
-        UserPublicDto author
+        UserPublicDto author,
+        List<String> imageUrls
 ) {}

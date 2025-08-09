@@ -8,6 +8,8 @@ import { clipboard } from "@milkdown/kit/plugin/clipboard";
 import { history } from "@milkdown/kit/plugin/history";
 import { indent } from "@milkdown/kit/plugin/indent";
 import { prism } from '@milkdown/plugin-prism'
+import { upload, uploadConfig, type Uploader } from '@milkdown/kit/plugin/upload';
+import { API_URL } from "../consts";
 
 type Props = {
     value: string;
@@ -19,6 +21,44 @@ const MilkdownEditorInner = ({ value, onChange, postId }: Props) => {
     const lastPostId = useRef<string | null>(null);
     const lastValue = useRef<string>("");
 
+    const uploader: Uploader = async (files, schema) => {
+        const imageFiles: File[] = [];
+        for (let i = 0; i < files.length; i++) {
+            const file = files.item(i);
+            if (!file) continue;
+            if (!file.type.startsWith("image/")) continue;
+            imageFiles.push(file);
+        }
+
+        const nodes = await Promise.all(
+            imageFiles.map(async (image) => {
+                const formData = new FormData();
+                formData.append("file", image);
+
+                console.log("going to fetch")
+                const res = await fetch(`${API_URL}/uploads`, {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Upload failed: ${res.statusText}`);
+                }
+                console.log("fetched!");
+
+                const data = await res.json();
+                console.log("data", data);
+
+                return schema.nodes.image.createAndFill({
+                    src: data.url,
+                    alt: image.name,
+                })!;
+            })
+        );
+
+        return nodes;
+    };
+
     const { get } = useEditor((root) =>
         Editor.make()
             .config((ctx) => {
@@ -28,6 +68,11 @@ const MilkdownEditorInner = ({ value, onChange, postId }: Props) => {
                     onChange(markdown);
                     lastValue.current = markdown;
                 });
+                ctx.update(uploadConfig.key, (prev) => ({
+                    ...prev,
+                    uploader,
+                    enableHtmlFileUploader: true,
+                }));
             })
             .use(commonmark)
             .use(listener)
@@ -35,6 +80,7 @@ const MilkdownEditorInner = ({ value, onChange, postId }: Props) => {
             .use(history)
             .use(indent)
             .use(prism)
+            .use(upload)
     );
 
     useEffect(() => {
@@ -56,17 +102,11 @@ const MilkdownEditorInner = ({ value, onChange, postId }: Props) => {
     }, [postId, value, get]);
 
     return (
-        <div
-            className={`
-                [&_.ProseMirror:focus-visible]:outline-none`}
-        >
+        <div className={`[&_.ProseMirror:focus-visible]:outline-none`}>
             <Milkdown />
         </div>
     );
 };
-
-
-
 
 export const MilkdownEditor = (props: Props) => (
     <MilkdownProvider>
