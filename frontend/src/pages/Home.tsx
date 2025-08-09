@@ -21,7 +21,7 @@ export default function Home() {
 
                 {!loading && !error && posts.length > 0 && (
                     <>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 md:gap-4">
                             {posts.map((post) => (
                                 <PostItem key={post.id} post={post} />
                             ))}
