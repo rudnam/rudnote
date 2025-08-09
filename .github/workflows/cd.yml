@@ -43,6 +43,11 @@ jobs:
 
           # Deploy on EC2
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${USER}@${HOST} "
+            export R2_ACCOUNT_ID=${{ secrets.R2_ACCOUNT_ID }}
+            export R2_BUCKET=${{ secrets.R2_BUCKET }}
+            export R2_ACCESS_KEY=${{ secrets.R2_ACCESS_KEY }}
+            export R2_SECRET_KEY=${{ secrets.R2_SECRET_KEY }}
+
             cd ${DEPLOY_PATH}
             
             # Pull the latest images
