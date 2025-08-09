@@ -7,10 +7,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/rudnote_db
       SPRING_DATASOURCE_USERNAME: rudnote_user
       SPRING_DATASOURCE_PASSWORD: rudnote_pass
-      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
-      R2_SECRET_KEY: ${R2_SECRET_KEY}
-      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
-      R2_BUCKET: ${R2_BUCKET}
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY:-a}
+      R2_SECRET_KEY: ${R2_SECRET_KEY:-a}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID:-a}
+      R2_BUCKET: ${R2_BUCKET:-a}
     depends_on:
       - db
     networks:
