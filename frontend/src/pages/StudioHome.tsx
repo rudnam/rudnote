@@ -35,6 +35,14 @@ export const StudioHome = () => {
                             className="flex flex-col h-full p-4 border border-zinc-300 rounded-lg hover:bg-zinc-200 transition-colors space-y-2"
                         >
                             <div>
+                                <span
+                                    className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${post.status === "DRAFT"
+                                        ? "text-yellow-800 bg-yellow-100"
+                                        : "text-green-800 bg-green-100"
+                                        }`}
+                                >
+                                    {post.status === "DRAFT" ? "Draft" : "Published"}
+                                </span>
                                 <h3 className="text-lg font-semibold font-serif">{post.title}</h3>
                                 <p className="text-sm text-zinc-600">{post.summary}</p>
                             </div>

@@ -19,7 +19,7 @@ export const Auth = () => {
     } = useAuthForm();
 
     return (
-        <div className="flex-1 flex flex-col items-center bg-zinc-50 py-10">
+        <div className="flex-1 flex flex-col items-center bg-zinc-50 py-10 px-6">
             {!token ? (
                 <form
                     onSubmit={(e) => {

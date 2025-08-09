@@ -6,7 +6,7 @@ export default function Home() {
     const { posts, loading, error } = usePosts();
 
     return (
-        <div className="w-full max-w-screen-md mx-auto p-6 space-y-10">
+        <div className="w-full max-w-screen-md mx-auto py-6 md:px-6 space-y-10">
             <section className="space-y-4">
                 <h1 className="text-center font-semibold text-lg">Latest Posts</h1>
 

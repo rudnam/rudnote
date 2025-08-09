@@ -34,7 +34,7 @@ export const PostItem = ({ post }: { post: Post }) => {
                 <img
                     src={"https://images.unsplash.com/photo-1554629947-334ff61d85dc"}
                     alt="Blog image"
-                    className="max-h-24 max-w-32 w-full rounded-lg object-cover"
+                    className="max-h-16 md:max-h-24 max-w-20 md:max-w-32 w-full rounded-lg object-cover"
                 />
             </div>
 

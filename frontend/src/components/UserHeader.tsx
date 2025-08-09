@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import type { UserPublic } from "../types";
+import { MapPin, Link as LinkIcon } from "lucide-react";
 
 export const UserHeader = ({
     user,
@@ -19,6 +20,19 @@ export const UserHeader = ({
         <div className="flex flex-col">
             <h1 className="text-3xl font-bold font-sans">{user.displayName || user.username}</h1>
             <p className="text-zinc-600">@{user.username}</p>
+            <div className="flex text-sm items-center mt-2 space-x-1">
+                <MapPin className="h-4 w-4" />
+                <p>{user.location}</p>
+            </div>
+            <div className="flex text-sm items-center mt-2 space-x-1">
+                <LinkIcon className="h-4 w-4" />
+                <Link
+                    className="hover:underline"
+                    to={`${user.websiteUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >{user.websiteUrl}</Link>
+            </div>
             {isOwner && (
                 <div className="flex space-x-2">
                     <button
@@ -34,5 +48,6 @@ export const UserHeader = ({
 
             )}
         </div>
+
     </div>
 );

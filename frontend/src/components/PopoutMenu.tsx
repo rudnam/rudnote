@@ -52,15 +52,17 @@ export const PopoutMenu = ({
             <button onClick={() => setOpen((prev) => !prev)}>
                 {trigger}
             </button>
-            {open && (
-                <div
-                    className={`absolute mt-2 ${width} bg-white border border-zinc-200 rounded-xl shadow-md z-50 ${align === "right" ? "right-0" : "left-0"
-                        }`}
-                    onClick={handleItemClick}
-                >
-                    {children}
-                </div>
-            )}
+
+            <div
+                className={`absolute mt-2 ${width} bg-white border border-zinc-200 rounded-xl shadow-md z-50 transform transition-all duration-200 ease-out
+            ${align === "right" ? "right-0" : "left-0"}
+            ${open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}
+        `}
+                onClick={handleItemClick}
+            >
+                {children}
+            </div>
         </div>
+
     );
 };

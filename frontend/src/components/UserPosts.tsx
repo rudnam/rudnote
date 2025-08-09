@@ -17,7 +17,7 @@ export const UserPosts = ({
     return (
         <section>
             <h2 className="text-2xl font-semibold mt-6 mb-2">Posts</h2>
-            <ul className="space-y-4">
+            <ul className="-mx-4">
                 {posts.length > 0 ? (
                     posts.map((post) => <PostItem key={post.id} post={post} />)
                 ) : (

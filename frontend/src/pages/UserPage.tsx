@@ -53,7 +53,6 @@ export const UserPage = () => {
             )}
 
             <section>
-                <h2 className="text-2xl font-semibold mb-2">Bio</h2>
                 <p className="text-zinc-700 mb-4">{displayUser.bio || "No bio"}</p>
             </section>
 
