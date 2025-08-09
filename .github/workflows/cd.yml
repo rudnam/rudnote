@@ -50,20 +50,11 @@ jobs:
 
             cd ${DEPLOY_PATH}
             
-            # Pull the latest images
-            sudo docker compose -f docker-compose.prod.yml pull
-            
-            # Stop existing containers
-            sudo docker compose -f docker-compose.prod.yml down || true
-            
-            # Start updated containers in detached mode
-            sudo docker compose -f docker-compose.prod.yml up -d
-            
-            # Clean up old images
-            sudo docker image prune -f
-            
-            # Verify deployment status
-            sudo docker compose -f docker-compose.prod.yml ps
+            sudo -E docker compose -f docker-compose.prod.yml pull
+            sudo -E docker compose -f docker-compose.prod.yml down || true
+            sudo -E docker compose -f docker-compose.prod.yml up -d
+            sudo -E docker image prune -f
+            sudo -E docker compose -f docker-compose.prod.yml ps
             
             echo 'Deployment completed successfully!'
           "

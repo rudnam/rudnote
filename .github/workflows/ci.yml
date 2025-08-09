@@ -56,7 +56,7 @@ jobs:
       - name: Install dependencies and Playwright browsers
         run: |
           npm ci
-          npx playwright install --with-deps
+          npx playwright install --with-deps chromium
 
       - name: Start backend and db with docker compose
         run: docker compose up -d backend db
