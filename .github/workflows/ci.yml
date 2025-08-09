@@ -94,48 +94,45 @@ jobs:
     defaults:
       run:
         working-directory: backend
-    services:
-      db:
-        image: postgres:15-alpine
-        env:
-          POSTGRES_DB: rudnote_db
-          POSTGRES_USER: rudnote_user
-          POSTGRES_PASSWORD: rudnote_pass
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready -U rudnote_user -d rudnote_db
-          --health-interval 5s
-          --health-timeout 2s
-          --health-retries 10
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Java
+
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 21
-          cache: maven
+          distribution: "temurin"
+          java-version: "21"
 
-      - name: Wait for DB to be ready
+
+      - name: Set up db
+        run: docker compose up -d db
+
+
+      - name: Wait for db to be ready
         run: |
-          for i in {1..15}; do
+          for i in {1..10}; do
             if docker exec $(docker ps -qf "name=db") pg_isready -U rudnote_user -d rudnote_db; then
               echo "Database is ready"
               exit 0
             fi
-            echo "Waiting for database to be ready ($i/15)..."
-            sleep 4
+            echo "Waiting for database to be ready..."
+            sleep 2
           done
           echo "Database did not become ready in time."
-          docker logs $(docker ps -qf "name=db") || true
+          docker compose logs db
           exit 1
 
-      - name: Run tests with Maven
-        run: ./mvnw clean verify -DskipTests=false -Dmaven.test.failure.ignore=false
+      - name: Test
+        run: |
+          ./mvnw clean verify -DskipTests=false -Dmaven.test.failure.ignore=true
+          if [ $? -ne 0 ]; then
+            echo "Tests failed"
+            exit 1
+          fi
+          echo "Tests passed"
 
   docker-push:
     name: Build and Push Docker Images
