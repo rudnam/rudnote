@@ -52,9 +52,10 @@ export type Post = {
   updatedAt: string;
   publishedAt: string;
   author: UserPublic;
+  imageUrls: string[];
 };
 
-export type PostPayload = Omit<Post, "id" | "createdAt" | "updatedAt" | "publishedAt" | "author">;
+export type PostPayload = Omit<Post, "id" | "createdAt" | "updatedAt" | "publishedAt" | "author" | "imageUrls">;
 
 export type UserMe = {
   id: string;

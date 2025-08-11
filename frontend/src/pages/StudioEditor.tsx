@@ -44,7 +44,7 @@ export const StudioEditor = () => {
             }
             setEditorLoading(false);
         }
-    }, [id, posts]);
+    }, [id, posts, isNew]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

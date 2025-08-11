@@ -31,11 +31,12 @@ export const PostItem = ({ post }: { post: Post }) => {
                     <h3 className="font-semibold text-lg/6  line-clamp-2">{post.title}</h3>
                     <p className="text-sm text-zinc-600 line-clamp-3">{post.summary}</p>
                 </div>
-                <img
-                    src={"https://images.unsplash.com/photo-1554629947-334ff61d85dc"}
-                    alt="Blog image"
-                    className="max-h-16 md:max-h-20 max-w-20 md:max-w-28 w-full rounded-lg object-cover"
-                />
+                {post.imageUrls.length > 0 && (
+                    <img
+                        src={post.imageUrls[0]}
+                        alt="Blog image"
+                        className="max-h-16 md:max-h-20 max-w-20 md:max-w-28 w-full rounded-lg object-cover"
+                    />)}
             </div>
 
         </Link>
