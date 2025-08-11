@@ -39,23 +39,18 @@ public class UploadController {
         Path tempDir = Path.of(System.getProperty("java.io.tmpdir"), "uploads");
 
         try {
-            // Ensure upload temp directory exists
             if (Files.notExists(tempDir)) {
                 Files.createDirectories(tempDir);
             }
 
-            // Save file to temp location
             Path tempFile = tempDir.resolve(key.substring("uploads/".length()));
             file.transferTo(tempFile.toFile());
 
-            // Upload to S3/R2
             amazonS3.putObject(new PutObjectRequest(bucketName, key, tempFile.toFile()));
             ;
 
-            // Delete temp file
             Files.deleteIfExists(tempFile);
 
-            // Compose public URL
             String publicUrl = String.format("https://images.note.rudnam.com/%s", key);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
